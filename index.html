@@ -198,7 +198,7 @@
     <svg id="area1" class="mainChart" width="760" height="200"></svg>
     <svg id="area2" class="detailsChart" width="200" height="200"></svg>
   </div>
-  <div id="area8">
+  <div id="area8" style="position:static">
     <svg id = "map" width="960" height="600"></svg>
   </div>
   <body>
@@ -1666,11 +1666,11 @@
       var header = d3.select("#map").append("h2")
           .attr("class")
 
-      var div = d3.select("body").append("div")
+      var div = d3.select("#area8").append("div")
           .attr("class", "tooltip")
           .style("opacity", 0);
 
-      var svg = d3.select("svg"),
+      var svg = d3.select("#map"),
           width = +svg.attr("width"),
           height = +svg.attr("height");
 
