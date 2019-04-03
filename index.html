@@ -2,28 +2,1060 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <script src="lib/d3.v5.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>HW2</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300" rel="stylesheet">
-</head>
+    <style>
+      path.link {
+        fill: none;
+
+      }
+
+      .circle {
+        fill: #FFEE93;
+        stroke: #FFC09F;
+      //  stroke: black;
+        stroke-width: 1.5px;
+      }
+
+      .fixed {
+        fill: #FFC09F;
+        stroke: #fff;
+        stroke: black;
+        stroke-width: 1.5px;
+      }
+      text {
+        fill: #000;
+        font: 10px sans-serif;
+        pointer-events: none;
+      }
+      body {
+        font: 11px sans-serif;
+      }
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+      .dot {
+        fill-opacity: 0;
+      }
+      axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+      .point {
+        fill: steelblue;
+        stroke: #000;
+      }
+      .tooltip {
+        position: absolute;
+        width: 200px;
+        height: 28px;
+        pointer-events: none;
+      }
+
+      @media only screen and (max-width:680px) {
+        /* For mobile phones: */
+      }
+    </style>
+  </head>
+  <div id="areaz"></div>
+  <div id="area1"></div>
+  <div id="area2"></div>
+  <div id="area3"></div>
+  <div id="area4"></div>
+  <div id="area5"></div>
   <body>
-    <div>
-      <iframe src="Q2/graph.html" height="700" width="1200" style="border:none;"></iframe>
-    </div>
-    <div>
-      <iframe src="Q3/scatterplot.html" height="700" width="1200" style="border:none;"></iframe>
-    </div>
-    <div>
-      <iframe src="Q4/heatmap.html" height="700" width="1200" style="border:none;"></iframe>
-    </div>
-    <div>
-      <iframe src="Q5/interactive.html" height="700" width="1200" style="border:none;"></iframe>
-    </div>
-     <div>
-      <iframe src="Q6/q6.html" height="700" width="1200" style="border:none;"></iframe>
-    </div>
-    
+    <script>
+      // get the data
+      links =  [
+        {
+          "source": "Green Bay Packers",
+          "target": "Kansas City Chiefs",
+          "value": 0
+        },
+        {
+          "source": "Green Bay Packers",
+          "target": "Oakland Raiders",
+          "value": 0
+        },
+        {
+          "source": "New York Jets",
+          "target": "Baltimore Colts",
+          "value": 1
+        },
+        {
+          "source": "Kansas City Chiefs",
+          "target": "Minnesota Vikings",
+          "value": 1
+        },
+        {
+          "source": "Baltimore Colts",
+          "target": "Dallas Cowboys",
+          "value": 1
+        },
+        {
+          "source": "Dallas Cowboys",
+          "target": "Miami Dolphins",
+          "value": 0
+        },
+        {
+          "source": "Miami Dolphins",
+          "target": "Washington Redskins",
+          "value": 1
+        },
+        {
+          "source": "Miami Dolphins",
+          "target": "Minnesota Vikings",
+          "value": 1
+        },
+        {
+          "source": "Pittsburgh Steelers",
+          "target": "Minnesota Vikings",
+          "value": 1
+        },
+        {
+          "source": "Pittsburgh Steelers",
+          "target": "Dallas Cowboys",
+          "value": 1
+        },
+        {
+          "source": "Oakland Raiders",
+          "target": "Minnesota Vikings",
+          "value": 1
+        },
+        {
+          "source": "Dallas Cowboys",
+          "target": "Denver Broncos",
+          "value": 0
+        },
+        {
+          "source": "Pittsburgh Steelers",
+          "target": "Los Angeles Rams",
+          "value": 1
+        },
+        {
+          "source": "Oakland Raiders",
+          "target": "Philadelphia Eagles",
+          "value": 1
+        },
+        {
+          "source": "San Francisco 49ers",
+          "target": "Cincinnati Bengals",
+          "value": 0
+        },
+        {
+          "source": "Washington Redskins",
+          "target": "Miami Dolphins",
+          "value": 0
+        },
+        {
+          "source": "Los Angeles Raiders",
+          "target": "Washington Redskins",
+          "value": 1
+        },
+        {
+          "source": "San Francisco 49ers",
+          "target": "Miami Dolphins",
+          "value": 0
+        },
+        {
+          "source": "Chicago Bears",
+          "target": "New England Patriots",
+          "value": 0
+        },
+        {
+          "source": "New York Giants",
+          "target": "Denver Broncos",
+          "value": 0
+        },
+        {
+          "source": "Washington Redskins",
+          "target": "Denver Broncos",
+          "value": 0
+        },
+        {
+          "source": "San Francisco 49ers",
+          "target": "Denver Broncos",
+          "value": 0
+        },
+        {
+          "source": "New York Giants",
+          "target": "Buffalo Bills",
+          "value": 0
+        },
+        {
+          "source": "Washington Redskins",
+          "target": "Buffalo Bills",
+          "value": 0
+        },
+        {
+          "source": "Dallas Cowboys",
+          "target": "Buffalo Bills",
+          "value": 0
+        },
+        {
+          "source": "San Francisco 49ers",
+          "target": "San Diego Chargers",
+          "value": 0
+        },
+        {
+          "source": "Dallas Cowboys",
+          "target": "Pittsburgh Steelers",
+          "value": 0
+        },
+        {
+          "source": "Green Bay Packers",
+          "target": "New England Patriots",
+          "value": 0
+        },
+        {
+          "source": "Denver Broncos",
+          "target": "Green Bay Packers",
+          "value": 1
+        },
+        {
+          "source": "Denver Broncos",
+          "target": "Atlanta Falcons",
+          "value": 1
+        },
+        {
+          "source": "St. Louis Rams",
+          "target": "Tennessee Titans",
+          "value": 0
+        },
+        {
+          "source": "Baltimore Ravens",
+          "target": "New York Giants",
+          "value": 1
+        },
+        {
+          "source": "New England Patriots",
+          "target": "St. Louis Rams",
+          "value": 1
+        },
+        {
+          "source": "Tampa Bay Buccaneers",
+          "target": "Oakland Raiders",
+          "value": 0
+        },
+        {
+          "source": "New England Patriots",
+          "target": "Carolina Panthers",
+          "value": 1
+        },
+        {
+          "source": "New England Patriots",
+          "target": "Philadelphia Eagles",
+          "value": 1
+        },
+        {
+          "source": "Pittsburgh Steelers",
+          "target": "Seattle Seahawks",
+          "value": 1
+        },
+        {
+          "source": "Indianapolis Colts",
+          "target": "Chicago Bears",
+          "value": 1
+        },
+        {
+          "source": "New York Giants",
+          "target": "New England Patriots",
+          "value": 0
+        },
+        {
+          "source": "Pittsburgh Steelers",
+          "target": "Arizona Cardinals",
+          "value": 1
+        },
+        {
+          "source": "New Orleans Saints",
+          "target": "Indianapolis Colts",
+          "value": 0
+        },
+        {
+          "source": "Green Bay Packers",
+          "target": "Pittsburgh Steelers",
+          "value": 0
+        },
+        {
+          "source": "Baltimore Ravens",
+          "target": "San Francisco 49ers",
+          "value": 1
+        },
+        {
+          "source": "Seattle Seahawks",
+          "target": "Denver Broncos",
+          "value": 0
+        },
+        {
+          "source": "New England Patriots",
+          "target": "Seattle Seahawks",
+          "value": 1
+        },
+        {
+          "source": "Denver Broncos",
+          "target": "Carolina Panthers",
+          "value": 1
+        },
+        {
+          "source": "New England Patriots",
+          "target": "Atlanta Falcons",
+          "value": 1
+        },
+        {
+          "source": "Philadelphia Eagles",
+          "target": "New England Patriots",
+          "value": 0
+        }];
+
+      var nodes = {};
+      var degrees = {};
+      //console.log(links);
+      // Compute the distinct nodes from the links.
+      links.forEach(function(link) {
+          if(typeof degrees[link.source] == "undefined"){
+            degrees[link.source] = 1;
+          } else {
+            degrees[link.source] = degrees[link.source] + 1;
+          }
+          if(typeof degrees[link.target] == "undefined"){
+            degrees[link.target] = 1;
+          } else{
+            degrees[link.target] = degrees[link.target] + 1;
+          }
+          link.source = nodes[link.source] ||
+              (nodes[link.source] = {name: link.source});
+          link.target = nodes[link.target] ||
+              (nodes[link.target] = {name: link.target});
+
+      });
+
+      var width = 1200,
+          height = 700;
+
+      var force = d3.forceSimulation()
+          .nodes(d3.values(nodes))
+          .force("link", d3.forceLink(links).distance(60))
+          .force('center', d3.forceCenter(width / 2, height / 2))
+          .force("x", d3.forceX())
+          .force("y", d3.forceY())
+          .force("charge", d3.forceManyBody().strength(-250))
+          .alphaTarget(1)
+          .on("tick", tick);
+
+      var svg = d3.select("#areaz").append("svg")
+          .attr("width", width)
+          .attr("height", height);
+
+      // add the links and the arrows
+
+      var path = svg.append("g")
+      .selectAll("path")
+      .data(links)
+      .enter()
+      .append("path")
+      .attr("class", function(d) { return "link " + d.type; });
+
+
+      // define the nodes
+      var node = svg.selectAll(".node")
+          .data(force.nodes())
+        .enter().append("g")
+          .attr("class", "node")
+          .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended)
+            );
+
+      // add the nodes3
+      node.append("circle")
+          .attr("class","circle")
+          .attr("r", function(d) {
+            weight = degrees[d.name];
+            var minRadius = 3;
+            return minRadius + (weight*2);
+          })
+          .on("dblclick", dblclick);
+
+      var textWidth = {};
+
+
+      /// add the labels
+      node.append("text")
+          .attr("dx", "0px")
+          .attr("dy", "20px")
+          .text(function(d) {
+            return d.name })
+            .each(function(d,i){
+              textWidth[d.name] = this.getComputedTextLength();
+              this.remove();
+            });
+
+      node.append("text")
+          .attr("dx", function(d){
+            return -textWidth[d.name]/2;
+          })
+          .attr("dy","18px")
+          .text(function(d) {
+            return d.name });
+
+      // add the curvy lines
+      function tick() {
+          path.attr("d", function(d) {
+              var dx = d.target.x - d.source.x,
+                  dy = d.target.y - d.source.y,
+                  dr = Math.sqrt(dx * dx + dy * dy);
+              return "M" +
+                  d.source.x + "," +
+                  d.source.y + "A" +
+                  dr + "," + dr + " 0 0,1 " +
+                  d.target.x + "," +
+                  d.target.y;
+          });
+
+          path.attr("stroke", function(d) {
+            //console.log(d.index)
+            if(d.value == 0){
+
+              return "#ADF7B6";
+            } else if(d.value == 1){
+              return "#79ADDC";
+            }
+          });
+
+          path.attr("stroke-width", function(d){
+            if(d.value == 0){
+              return 4;
+            } else if(d.value == 1){
+              return 2;
+            }
+          });
+
+          node.attr("transform", function(d) {
+              return "translate(" + d.x + "," + d.y + ")"; });
+      };
+
+      function dragstarted(d) {
+            if (!d3.event.active) force.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+          };
+
+      function dragged(d) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+      };
+
+      function dblclick(d) {
+        if(typeof d.fixed == "undefined"){
+          d.fixed = false;
+        };
+        console.log(d.name, d.fixed);
+        d.fixed = !d.fixed;
+        console.log(d.name, d.fixed, d3.event.active);
+        if(d.fixed == true){
+          d.fx = d.x;
+          d.fy = d.y;
+          d3.select(this).attr("class", "fixed");
+        } else{
+          d.fx = null;
+          d.fy = null;
+          d3.select(this).attr("class","circle");
+        }
+      }
+
+      function dragended(d) {
+        if (!d3.event.active) force.alphaTarget(0);
+        if (d.fixed == true){
+           d.fx = d.x;
+           d.fy = d.y;
+        }
+        else{
+          d.fx = null;
+          d.fy = null;
+        }
+      };
+    </script>
+
+    <script>
+      document.getElementById("area1").style.pageBreakAfter = "always";
+      document.getElementById("area2").style.pageBreakAfter = "always";
+      document.getElementById("area3").style.pageBreakAfter = "always";
+      document.getElementById("area4").style.pageBreakAfter = "always";
+      document.getElementById("area5").style.pageBreakAfter = "always";
+      var margin = {top: 50, right: 20, bottom: 30, left: 80},
+          width = 960 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
+
+      // setup x
+      var xValue = function(d) { return parseFloat(d.Rating);}, // data -> value
+          xScale = d3.scaleLinear().range([0, width]), // value -> display
+          xMap = function(d) { return xScale(xValue(d));}, // data -> display
+          xAxis = d3.axisBottom().scale(xScale);
+
+      // setup y
+      var yValue = function(d) { return parseInt(d.WinsNoms)}, // data -> value
+          yScale = d3.scaleLinear().range([height, 0]).nice(), // value -> display
+          yMap = function(d) {return yScale(yValue(d));}, // data -> display
+          yAxis = d3.axisLeft().scale(yScale);
+      // setup second y variable
+
+      var yValue2 = function(d) { return parseInt(d.Budget)}, // data -> value
+          yScale2 = d3.scaleLinear().range([height, 0]), // value -> display
+          yMap2 = function(d) {
+            return yScale2(yValue2(d));}, // data -> display
+          yAxis2 = d3.axisLeft().scale(yScale2);
+
+      var yValue3 = function(d) { return parseInt(d.Votes)}, // data -> value
+          yScale3 = d3.scaleLinear().range([height, 0]), // value -> display
+          yMap3 = function(d) { return yScale3(yValue3(d));}, // data -> display
+          yAxis3 = d3.axisLeft().scale(yScale3);
+
+      var yValue4 = function(d) { return parseInt(d.Votes)}, // data -> value
+          yScale4 = d3.scaleSqrt().range([height, 0]), // value -> display
+          yMap4 = function(d) { return yScale4(yValue4(d));}, // data -> display
+          yAxis4 = d3.axisLeft().scale(yScale4);
+
+      var yValue5 = function(d) { return parseInt(d.Votes)}, // data -> value
+          yScale5 = d3.scaleLog().clamp(true).range([height, 0]).nice(), // value -> display
+          yMap5 = function(d) { return yScale5(yValue5(d));}, // data -> display
+          yAxis5 = d3.axisLeft().scale(yScale5);
+
+
+
+      //var shapeScale = d3.scaleOrdinal
+
+          var min = 200;
+          var max = null;
+          var symbols = d3.scaleOrdinal(d3.symbols);
+          var symbol = d3.symbol().size(100);
+      //get min and max. Take difference and place the current
+      var sizeValue = function(d) { return d.Votes};
+
+      // add the graph canvas to the body of the webpage
+      var chart1 = d3.select("#area1").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var chart2 = d3.select("#area2").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var chart3 = d3.select("#area3").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var chart4 = d3.select("#area4").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var chart5 = d3.select("#area5").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      // add the tooltip area to the webpage
+      var tooltip = d3.select("body").append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 0);
+
+      //console.log(min, max);
+      data = d3.csv("Q3/movies.csv").then(function(data){
+              data.Rating = +data.Rating;
+              data.WinsNoms = +data.WinsNoms;
+              data.IsGoodRating = +data.IsGoodRating;
+              data.Budget = +data.Budget;
+              data.Votes = +data.Votes;
+
+              data.forEach(function(d){
+                if(parseInt(d.WinsNoms) < min){
+                  min = d.WinsNoms;
+                } else if(parseInt(d.WinsNoms) >= max){
+                  max = d.WinsNoms;
+                }
+              })
+
+            //console.log(min, max);
+
+
+          // don't want dots overlapping axis, so add in buffer to data domain
+            xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+            yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+            yScale2.domain([d3.min(data, yValue2)-1, d3.max(data, yValue2)+1]);
+            yScale3.domain([d3.min(data, yValue3)-1, d3.max(data, yValue3)+1]);
+            yScale4.domain([d3.min(data, yValue4)-1, d3.max(data, yValue4)+1]);
+            yScale5.domain([d3.min(data, yValue5)-1, d3.max(data, yValue5)+1]);
+
+            //yScale2.domain([d3.min(data, yValue2)-1, d3.max(data, yValue2)+1]);
+
+            // draw legend colored rectangles
+
+
+            chart1.append("text")
+               .attr("x",(width/2))
+               .attr("y",10)
+               .attr("text-anchor","middle")
+               .text("Wins+Nominations vs. Rating");
+
+            // x-axis
+            chart1.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            chart1.append("text")
+                .attr("class", "label")
+                .attr("x", width)
+                .attr("y", height-10)
+                .style("text-anchor", "end")
+                .text("Rating");
+
+            // y-axis
+            chart1.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+
+            chart1.append("text")
+              .attr("class", "label")
+              .attr("transform", "rotate(-90)")
+              .attr("y", 6)
+              .attr("dy", ".71em")
+              .style("text-anchor", "end")
+              .text("Wins+Nominations");
+
+            // draw dots
+            chart1.selectAll(".dot")
+                .data(data)
+              .enter().append("circle")
+                .attr("class", "dot")
+                //.attr("d", d3.symbol().type(d3.symbolCross))
+                .attr("r", 3.5)
+                .attr("cx", xMap)
+                .attr("cy", yMap)
+                .style("stroke", function(d) {
+                  if(d.IsGoodRating == 1){
+                    return('blue');
+                  } else{ return 'red'};})
+                .on("mouseover", function(d) {
+                    tooltip.transition()
+                         .duration(200)
+                         .style("opacity", .9);
+                    tooltip.html(d.Title + "<br/> (" + xValue(d)
+                    + ", " + yValue(d) + ")")
+                         .style("left", (d3.event.pageX + 5) + "px")
+                         .style("top", (d3.event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(d) {
+                    tooltip.transition()
+                         .duration(500)
+                         .style("opacity", 0);
+                });
+
+
+                // draw legend
+                var legend1 = chart1.selectAll(".legend")
+                    .data(['Good Rating','Bad Rating'])
+                  .enter().append("g")
+                    .attr("class", "legend")
+                    .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+
+                   legend1.append("rect")
+                        .attr("x", width - 18)
+                        .attr("width", 18)
+                        .attr("height", 18)
+                        .style("fill", function(d){
+                          if(d=="Good Rating"){
+                            return 'blue'}
+                            else{return 'red'};
+                        });
+
+                // draw legend text
+                    legend1.append("text")
+                        .attr("x", width - 24)
+                        .attr("y", 9)
+                        .attr("dy", ".35em")
+                        .style("text-anchor", "end")
+                      .text(function(d) { return d;})
+
+
+                chart2.append("text")
+                   .attr("x",(width/2))
+                   .attr("y",10)
+                   .attr("text-anchor","middle")
+                   .text("Budget vs. Rating");
+
+                chart2.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
+
+                chart2.append("text")
+                    .attr("class", "label")
+                    .attr("x", width)
+                    .attr("y", height-10)
+                    .style("text-anchor", "end")
+                    .text("Rating");
+
+                // y-axis
+                chart2.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis2);
+                  chart2.append("text")
+                    .attr("class", "label")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Budget");
+
+
+
+
+
+
+                // draw dots
+                chart2.selectAll(".dot")
+                    .data(data)
+                  .enter().append("circle")
+                    .attr("class", "dot")
+                    .attr("r", 3.5)
+                    .attr("cx", xMap)
+                    .attr("cy", yMap2)
+                    .attr("d", d3.symbol().type(d3.symbolTriangle))
+                    .style("stroke", function(d) {
+                      if(d.IsGoodRating == 1){
+                        return('blue');
+                      } else{ return 'red'};})
+                    .on("mouseover", function(d) {
+                        tooltip.transition()
+                             .duration(200)
+                             .style("opacity", .9);
+                        tooltip.html(d.Title + "<br/> (" + xValue(d)
+                        + ", " + yValue(d) + ")")
+                             .style("left", (d3.event.pageX + 5) + "px")
+                             .style("top", (d3.event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function(d) {
+                        tooltip.transition()
+                             .duration(500)
+                             .style("opacity", 0);
+                    });
+
+                    // draw legend
+                    var legend2 = chart2.selectAll(".legend")
+                        .data(['Good Rating','Bad Rating'])
+                      .enter().append("g")
+                        .attr("class", "legend")
+                        .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+
+                       legend2.append("rect")
+                            .attr("x", width - 18)
+                            .attr("width", 18)
+                            .attr("height", 18)
+                            .style("fill", function(d){
+                              if(d=="Good Rating"){
+                                return 'blue'}
+                                else{return 'red'};
+                            });
+
+                    // draw legend text
+                        legend2.append("text")
+                            .attr("x", width - 24)
+                            .attr("y", 9)
+                            .attr("dy", ".35em")
+                            .style("text-anchor", "end")
+                          .text(function(d) { return d;})
+
+
+
+
+
+          chart3.append("text")
+             .attr("x",(width/2))
+             .attr("y",10)
+             .attr("text-anchor","middle")
+             .text("Votes vs. Rating");
+
+
+                    chart3.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis);
+                      chart3.append("text")
+                        .attr("class", "label")
+                        .attr("x", width)
+                        .attr("y", height-10)
+                        .style("text-anchor", "end")
+                        .text("Rating");
+
+                    // y-axis
+                    chart3.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis3);
+                      chart3.append("text")
+                        .attr("class", "label")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 6)
+                        .attr("dy", ".71em")
+                        .style("text-anchor", "end")
+                        .text("Votes");
+
+                      // draw dots
+                      chart3.selectAll(".dot")
+                          .data(data)
+                        .enter().append("circle")
+                          .attr("class", "dot")
+                          .attr("r", function(d){
+                            //console.log(d.WinsNoms);
+                            return ((d.WinsNoms/(max-min))*10+3.5)
+                          })
+                          //var min = Math.min.apply(Math, d.WinsNoms);
+                          //var max = Math.min.apply(Math, d.WinsNoms);
+                          .attr("cx", xMap)
+                          .attr("cy", yMap3)
+                          .attr("d", d3.symbol().type(d3.symbolTriangle))
+                          .style("stroke", function(d) {
+                            if(d.IsGoodRating == 1){
+                              return('blue');
+                            } else{ return 'red'};})
+                          .on("mouseover", function(d) {
+                              tooltip.transition()
+                                   .duration(200)
+                                   .style("opacity", .9);
+                              tooltip.html(d.Title + "<br/> (" + xValue(d)
+                              + ", " + yValue(d) + ")")
+                                   .style("left", (d3.event.pageX + 5) + "px")
+                                   .style("top", (d3.event.pageY - 28) + "px");
+                          })
+                          .on("mouseout", function(d) {
+                              tooltip.transition()
+                                   .duration(500)
+                                   .style("opacity", 0);
+                          });
+
+                          // draw legend
+                          var legend3 = chart3.selectAll(".legend")
+                              .data(['Good Rating','Bad Rating'])
+                            .enter().append("g")
+                              .attr("class", "legend")
+                              .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+
+                             legend3.append("rect")
+                                  .attr("x", width - 18)
+                                  .attr("width", 18)
+                                  .attr("height", 18)
+                                  .style("fill", function(d){
+                                    if(d=="Good Rating"){
+                                      return 'blue'}
+                                      else{return 'red'};
+                                  });
+
+                          // draw legend text
+                              legend3.append("text")
+                                  .attr("x", width - 24)
+                                  .attr("y", 9)
+                                  .attr("dy", ".35em")
+                                  .style("text-anchor", "end")
+                                .text(function(d) { return d;})
+
+
+
+            chart4.append("text")
+               .attr("x",(width/2))
+               .attr("y",10)
+               .attr("text-anchor","middle")
+               .text("Sqrt of Votes vs. Rating");
+
+
+
+      chart4.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+        chart4.append("text")
+          .attr("class", "label")
+          .attr("x", width)
+          .attr("y", height-10)
+          .style("text-anchor", "end")
+          .text("Rating");
+
+      // y-axis
+      chart4.append("g")
+          .attr("class", "y axis")
+          .call(yAxis4);
+        chart4.append("text")
+          .attr("class", "label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Votes");
+
+        // draw dots
+        chart4.selectAll(".dot")
+            .data(data)
+          .enter().append("circle")
+            .attr("class", "dot")
+            .attr("r", function(d){
+              return ((d.WinsNoms/(max-min))*10+3.5)
+            })
+            //var min = Math.min.apply(Math, d.WinsNoms);
+            //var max = Math.min.apply(Math, d.WinsNoms);
+            .attr("cx", xMap)
+            .attr("cy", yMap4)
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
+            .style("stroke", function(d) {
+              if(d.IsGoodRating == 1){
+                return('blue');
+              } else{ return 'red'};})
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                     .duration(200)
+                     .style("opacity", .9);
+                tooltip.html(d.Title + "<br/> (" + xValue(d)
+                + ", " + yValue(d) + ")")
+                     .style("left", (d3.event.pageX + 5) + "px")
+                     .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                     .duration(500)
+                     .style("opacity", 0);
+            });
+
+            // draw legend
+            var legend4 = chart4.selectAll(".legend")
+                .data(['Good Rating','Bad Rating'])
+              .enter().append("g")
+                .attr("class", "legend")
+                .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+
+               legend4.append("rect")
+                    .attr("x", width - 18)
+                    .attr("width", 18)
+                    .attr("height", 18)
+                    .style("fill", function(d){
+                      if(d=="Good Rating"){
+                        return 'blue'}
+                        else{return 'red'};
+                    });
+
+            // draw legend text
+                legend4.append("text")
+                    .attr("x", width - 24)
+                    .attr("y", 9)
+                    .attr("dy", ".35em")
+                    .style("text-anchor", "end")
+                  .text(function(d) { return d;})
+
+
+      chart5.append("text")
+         .attr("x",(width/2))
+         .attr("y",10)
+         .attr("text-anchor","middle")
+         .text("Log of Votes vs. Rating");
+
+      chart5.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+        chart5.append("text")
+          .attr("class", "label")
+          .attr("x", width)
+          .attr("y", height-10)
+          .style("text-anchor", "end")
+          .text("Rating");
+
+      // y-axis
+      chart5.append("g")
+          .attr("class", "y axis")
+          .call(yAxis5);
+        chart5.append("text")
+          .attr("class", "label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Votes");
+
+        // draw dots
+        chart5.selectAll(".dot")
+            .data(data)
+          .enter().append("circle")
+            .attr("class", "dot")
+            .attr("r", function(d){
+              return ((d.WinsNoms/(max-min))*10+3.5)
+            })
+            //var min = Math.min.apply(Math, d.WinsNoms);
+            //var max = Math.min.apply(Math, d.WinsNoms);
+            .attr("cx", xMap)
+            .attr("cy", yMap5)
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
+            .style("stroke", function(d) {
+              if(d.IsGoodRating == 1){
+                return('blue');
+              } else{ return 'red'};})
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                     .duration(200)
+                     .style("opacity", .9);
+                tooltip.html(d.Title + "<br/> (" + xValue(d)
+                + ", " + yValue(d) + ")")
+                     .style("left", (d3.event.pageX + 5) + "px")
+                     .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                     .duration(500)
+                     .style("opacity", 0);
+            });
+
+            // draw legend
+            var legend5 = chart5.selectAll(".legend")
+                .data(['Good Rating','Bad Rating'])
+              .enter().append("g")
+                .attr("class", "legend")
+                .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+
+               legend5.append("rect")
+                    .attr("x", width - 18)
+                    .attr("width", 18)
+                    .attr("height", 18)
+                    .style("fill", function(d){
+                      if(d=="Good Rating"){
+                        return 'blue'}
+                        else{return 'red'};
+                    });
+
+            // draw legend text
+                legend5.append("text")
+                    .attr("x", width - 24)
+                    .attr("y", 9)
+                    .attr("dy", ".35em")
+                    .style("text-anchor", "end")
+                  .text(function(d) { return d;})
+
+
+
+      });
+    </script>
+
   </body>
 </html>
-
