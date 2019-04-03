@@ -202,7 +202,7 @@
     <svg id = "map" width="960" height="600"></svg>
   </div>
   <body>
-    <script type="text/javascript">
+    <script>
       // get the data
       links =  [
         {
@@ -488,11 +488,11 @@
       // add the links and the arrows
 
       var path = svg.append("g")
-      .selectAll("path")
-      .data(links)
-      .enter()
-      .append("path")
-      .attr("class", function(d) { return "link " + d.type; });
+        .selectAll("path")
+        .data(links)
+        .enter()
+        .append("path")
+        .attr("class", function(d) { return "link " + d.type; });
 
 
       // define the nodes
@@ -616,7 +616,7 @@
       };
     </script>
 
-    <script type="text/javascript">
+    <script>
       document.getElementById("area1").style.pageBreakAfter = "always";
       document.getElementById("area2").style.pageBreakAfter = "always";
       document.getElementById("area3").style.pageBreakAfter = "always";
@@ -1188,7 +1188,7 @@
       });
     </script>
 
-    <script type="text/javascript">
+    <script>
       var margin = {top: 30, right: 70, bottom:70, left: 70},
         width = 600 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom,
