@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<html>
+  <style>
+    body {
+      font: 11px sans-serif;
+      text-align: center;
+    }
+
+    .legend {
+      font-family: Consolas, courier;
+    }
+    rect.bordered {
+      stroke: #E6E6E6;
+      stroke-width:2px;
+    }
+
+    text.mono {
+      font-size: 9pt;
+      font-family: Consolas, courier;
+      fill: #aaa;
+    }
+
+    .title {
+      font-family: Consolas, courier;
+      font-size:16pt;
+      fill: #000f;
+      text-align: center;
+    }
+
+    .axis{
+      fill: #000;
+      stroke-width:0px;
+      font-family: Consolas, courier;
+      fill: #aaa;
+      font-size: 10pt;
+    }
+
+
+
+  </style>
+  <head>
+    <script src="../lib/d3.v5.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <div id ="chart">
+      <div id="title1"></div>
+      <div id="dropdown"></div>
+    </div>
+    <script type="text/javascript">
+      var margin = {top: 30, right: 70, bottom:70, left: 70},
+        width = 600 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom,
+        colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+        boroughs = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island'],
+        crime = ['Assault', 'Burglary', 'Housing', 'Murder', 'Robbery', 'Shooting'],
+        years = [2011,2012,2013,2014,2015],
+        xDomain = crime,
+        yDomain = boroughs,
+        x = d3.scaleBand().domain(crime).range([0,width-margin.left-margin.right]),
+        y = d3.scaleBand().domain(boroughs).range([0,height-margin.top-margin.bottom]),
+        year = 2011,
+        p = 2,
+        arr = [],
+        arrLength = 0;
+
+
+      var title1 = d3.select("#title1")
+        .attr("width", (width+margin.left+margin.right))
+        .attr("height", (margin.top*4))
+        .append("g")
+        ;
+      var select3 = d3.select("#dropdown")
+        .attr("width", (width+margin.left+margin.right))
+        .attr("height", (margin.top*4))
+        .append("g")
+        .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
+
+      var select = select3
+        .append('select')
+          .attr('class','select')
+          .on('change',onchange)
+
+
+      var options = select
+        .selectAll('option')
+        .data(years).enter()
+        .append('option')
+          .text(function (d) { return d; });
+
+      function onchange() {
+        selectValue = d3.select('select').property('value')
+        year = (selectValue);
+        display2();
+      };
+
+      var svg = d3.select("#chart").append("svg")
+        .attr("width", (width+margin.left+margin.right))
+        .attr("height", (height+margin.top+margin.bottom))
+        .append("g")
+        .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
+
+      var xAxis = d3.axisBottom()
+        .tickSize(0)
+        .scale(x);
+
+      var yAxis = d3.axisLeft()
+        .tickSize(0)
+        .scale(y);
+
+      var colorScale = d3.scaleQuantile().range(colors);
+
+      var colorDomain; // generated dynamically
+
+
+      svg.append("text")
+          .attr("class", "mono")
+         .attr("x",-5)
+         .attr("y",10)
+         .attr("text-anchor","end")
+         .text("Borough");
+
+      svg.append("text")
+          .attr("x", width-100)
+          .attr("y", height-margin.bottom)
+          .attr("text-anchor","end")
+          .attr("class", "mono")
+          .text("Crime");
+
+      title1.append("text")
+         .attr("x",200)
+         .attr("y",200)
+         .attr("text-anchor","start")
+         .attr("class", "title")
+         .text("Crimes in New York City");
+
+
+      var legend1 = svg.selectAll(".legend2").append("g")
+          .data(colors)
+        .enter().append("g")
+          .attr("class", "legend2");
+
+
+      legend1.append("rect")
+          .attr("x", function(d, i) {
+            return x.bandwidth()/2*i + 30})
+          .attr("y", height-(10))
+          .attr("width", x.bandwidth()/2)
+          .attr("height", y.bandwidth() / 6)
+          .style("fill", function(d){
+            return d});
+
+      svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (height) + ")")
+        .call(xAxis)
+        .selectAll("text")
+          .attr("transform", "rotate(270)")
+          .attr("x", function(d,i){
+            return margin.bottom-30;
+          })
+          .attr("y",0)
+          .style("text-anchor", "start");
+
+      svg.append("g").attr("class", "axis").call(yAxis);
+
+
+      svg.append("text")
+        .attr("x", width/4)
+        .attr("y", height-20)
+        .attr("dy", "0.35em")
+        .attr("class", "mono")
+        .text(function(d){
+          return "No. of Crimes";
+        });
+
+
+      var map11 = d3.map();
+      var map12 = d3.map();
+      var map13 = d3.map();
+      var map14 = d3.map();
+      var map15 = d3.map();
+      var map = d3.map();
+
+
+      const data = d3.csv("heatmap.csv", function(d){
+        if(parseInt(d.Year)==2011){
+          map11.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2012){
+          map12.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2013){
+          map13.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2014){
+          map14.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2015){
+          map15.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+      });
+
+      data.then(function(){
+        display2();
+        return display2();
+      })
+
+      function display2(){
+        var processed = [];
+        picker = year;
+        for (index=0; index < crime.length; index++){
+          for(borough=0; borough<boroughs.length;borough++){
+            var count = 0
+
+            if(picker==2011){count = map11.get(crime[index])[borough]}
+            else if(picker==2012){count = map12.get(crime[index])[borough]}
+            else if(picker==2013){count = map13.get(crime[index])[borough]}
+            else if(picker==2014){count = map14.get(crime[index])[borough]}
+            else if(picker==2015){count = map15.get(crime[index])[borough]}
+            processed.push({'borough':boroughs[borough],'crime':crime[index],'count':count});
+          }
+        };
+
+        colorDomain = d3.extent(processed, function(entry){
+          return parseInt(entry.count);});
+        colorScale.domain(d3.range(colorDomain[0],colorDomain[1]));
+
+        var rects = svg.selectAll(".heatmap").data(processed);//cvg was canvas
+
+        //console.log(legend);
+        rects.enter().append("rect").attr("class","heatmap");
+        rects.exit().transition().duration(1000).remove();
+
+        rects.transition().duration(1000)
+          .attr("x", function(d) {
+            return x(d.crime) + p / 2; })
+          .attr("y", function(d) { return y(d.borough) + p / 2; })
+          .attr("width", x.bandwidth() - p)
+          .attr("height", y.bandwidth() - p)
+          .attr("class", "heatmap bordered")
+          .style("fill", function(d) {
+            //console.log(d.count, colorScale(d.count));
+            return colorScale(d.count); });
+
+        var list2 = Object.values(colorScale.quantiles());
+        list2.unshift(0);
+
+        var legend = svg.selectAll(".legend").data(list2);
+
+        legend.exit().remove();
+
+        legend.enter().append("text")
+          .attr("class", "legend")
+          .attr("x", function(d, i) {
+            return x.bandwidth()/2*i + 20})
+          .attr("y", height+5)
+          .attr("dy", ".35em")
+          .attr("dx", "1em")
+          .style("text-anchor", "start")
+          .merge(legend)
+            .text(function(d){
+            return parseInt(d);
+          });
+        }
+
+    </script>
+  </body>
+</html>

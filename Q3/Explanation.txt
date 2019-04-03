@@ -1,0 +1,5 @@
+b. The first graph is rather obvious, it shows that films with good ratings also are nominated for and win awards that critiques/raters award.
+The second graph tells an interesting story. Not all expensive films are well rated. This also separates the films due to the more even distribution of budget.
+
+c. The use of square root and log scales allows the user to see linear trends in data that may not be linear. A user can decipher a linear trend
+much easier than squared and log trends. 

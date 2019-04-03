@@ -1,0 +1,14 @@
+1. Ease to develop:
+  Excel: Excel has many tutorials, wizards, and help screens to assist developers making visualizations in Excel. This makes it much easier to use than D3. D3's versioning and peculiar syntax gives it a long learning curve. Tableau is much easier due to it's point and click interface. With practice, that interface would become just as intuitive as Excel's/
+
+2. Ease to maintain visualization:
+  Excel is very easy to maintain the visualizations as they are normally not very complicated. Additionally, the visual representation of data in tables makes it easy to manipulate. These reasons make it much easier to maintain than D3 but again, Tableau's interface makes it powerful and easy to use.
+
+3. Usability of visualization:
+  Excel has one use. Create static charts and graphs for reports. This it is very good at. Anything else that needs interactivity D3 and Tableau are better at due to their media being the websites.
+
+4. Scalability of visualizations:
+  Excel is very poor at handling large datasets. Much past a thousand records and Excel begins to slow down. The lack of ui for data processing in D3 makes it much better equipped to handle large datasets.
+
+5. System requirements:
+  Excel is a Microsoft tool so it needs a Windows OS. However, its media are generally reports so once the chart has been made all users can see it in their respective OS. D3 and Tableau are both web-based so can be used on all machines.

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>dpedrick3</title>
+  	<script src="../lib/d3.v5.min.js"></script>
+    <script src="../lib/d3-scale-chromatic.v1.min.js"></script>
+    <script src="../lib/topojson.v2.min.js"></script>
+    <script src="../lib/d3-tip.min.js"></script>
+    <style type="text/css">
+      .counties {
+        fill: none;
+        stroke: #fff;
+        stroke-linejoin: round;
+        stroke-width: .1;
+      }
+
+      .states {
+        fill: none;
+        stroke: #fff;
+        stroke-linejoin: round;
+        stroke-width: 1.5;
+      }
+
+      .d3-tip {
+        line-height: 1;
+        padding: 6px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      .d3-tip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+      }
+
+      .d3-tip.n:after {
+        margin: -2px 0 0 0;
+        top: 100%;
+        left: 0;
+      }
+		</style>
+  </head>
+  <svg width="960" height="600"></svg>
+  <body>
+		<script type="text/javascript">
+      var header = d3.select("body").append("h2")
+          .attr("class")
+
+      var div = d3.select("body").append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 0);
+
+      var svg = d3.select("svg"),
+          width = +svg.attr("width"),
+          height = +svg.attr("height");
+
+      svg.append("text")
+              .attr("x", (width / 2))
+              .attr("y", 20)
+              .attr("text-anchor", "middle")
+              .style("font-size", "22px")
+              .text("Choropleth Map of County Data");
+
+      svg.append("text")
+              .attr("x", width - 75)
+              .attr("y", height-210)
+              .attr("text-anchor", "middle")
+              .style("font-size", "22px")
+              .text("Poverty Rate");
+
+      var promises = [
+        d3.json("us.json"),
+        d3.csv("county_detail.csv", function(cd){
+          cd.TotalPop = +cd.TotalPop;
+          cd.IncomePerCap = +cd.IncomePerCap;
+          county_detail.set(cd.CensusId, [cd.TotalPop, cd.IncomePerCap]);
+        }),
+        d3.csv("county_poverty.csv", function(cp){
+           cp.Poverty = +cp.Poverty;
+           county_poverty.set(cp.CensusId, [cp.State, cp.County, cp.Poverty]);
+        })];
+
+      Promise.all(promises).then(ready);
+
+      var county_detail = d3.map();
+      var county_poverty = d3.map();
+      var path = d3.geoPath();
+      var x = d3.scaleLinear()
+        .domain([1,10])
+        .rangeRound([600,860]);
+
+      var color = d3.scaleThreshold()
+        .domain(d3.range(2,10))
+        .range(d3.schemeBlues[9]);
+
+      var g = svg.append("g")
+        .attr("class", "key")
+        .attr("transform", "translate(0,40)");
+
+      g.append("text")
+        .attr("class", "caption")
+        .attr("x", x.range()[0])
+        .attr("y", -6)
+        .attr("fill", "#000")
+        .attr("text-anchor", "start");
+
+      var legend1 = svg.selectAll(".legend")
+        .data(color.domain())
+        .enter().append("g")
+          .attr("class", "legend")
+          .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+
+      legend1.append("rect")
+        .attr("x", width - 80)
+        .attr("y", height - 200)
+        .attr("width", 18)
+        .attr("height", 18)
+          .style("fill", function(d){return color(d)});
+
+          // draw legend text
+      legend1.append("text")
+        .attr("x", width - 85)
+        .attr("y", height-190)
+        .attr("dy", ".35em")
+          .style("text-anchor", "end")
+          .text(function(d,i){
+            console.log(i);
+            var sign = "";
+            if(i==0){
+              sign = "<"
+            } else if(i==7){
+              sign = ">"
+            }
+            return sign + d + "%";})
+
+      var tip = d3.tip()
+        .attr('class','d3-tip')
+        .offset([-10,0])
+        .html(function(d){
+          return "State: "
+          + county_poverty.get(d.id)[0]
+          + "<br/>County: "+ county_poverty.get(d.id)[1]
+          + "<br/>Poverty Rate: "
+          +  d.rate + "%<br/>Total Population: "
+          +  d3.format(',')(county_detail.get(d.id)[0])
+          + "<br/>Income per capita: "
+          +  d3.format(',')(county_detail.get(d.id)[1]);
+      });
+
+      svg.call(tip);
+
+      function ready([us]) {
+        svg.append("g")
+          .attr("class", "counties")
+          .selectAll("path")
+          .data(topojson.feature(us, us.objects.counties).features)
+          .enter().append("path")
+          .attr("fill", function(d) {
+              return color(d.rate = county_poverty.get(d.id)[2]); })
+          .attr("d", path)
+          .on("mouseover",tip.show)
+          .on("mouseout", tip.hide)
+
+        svg.append("path")
+          .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b; }))
+          .attr("class", "counties")
+          .attr("d", path);
+
+        svg.append("path")
+          .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+          .attr("class", "states")
+          .attr("d", path);
+      }
+
+	  </script>
+	</body>
+</html>
