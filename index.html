@@ -3,11 +3,94 @@
   <head>
     <meta charset="utf-8">
     <script src="lib/d3.v5.min.js"></script>
+    <script src="lib/d3-scale-chromatic.v1.min.js"></script>
+    <script src="lib/topojson.v2.min.js"></script>
+    <script src="lib/d3-tip.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>HW2</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300" rel="stylesheet">
     <style>
+
+      .counties {
+        fill: none;
+        stroke: #fff;
+        stroke-linejoin: round;
+        stroke-width: .1;
+      }
+
+      .states {
+        fill: none;
+        stroke: #fff;
+        stroke-linejoin: round;
+        stroke-width: 1.5;
+      }
+
+      .d3-tip {
+        line-height: 1;
+        padding: 6px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      .d3-tip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+      }
+
+      .d3-tip.n:after {
+        margin: -2px 0 0 0;
+        top: 100%;
+        left: 0;
+      }
+      .bar {
+        fill:#757575 ;
+      }
+      .bar:hover {
+        fill: #65AFFF;
+        cursor: pointer;
+      }
+      .mainChart{
+        float:left;
+      }
+      .detailsChart{
+        float: left;
+      }
+
+      .labelSmall {
+        font-size: 10px;
+        color: #E6E6E6;
+        font-family: courier, Verdana, sans-serif;
+      }
+
+
+      .labelBig {
+        font-size: 12px;
+        color: #E6E6E6;
+        font-family: courier, Verdana, sans-serif;
+      }
+
+
+      .dot {
+          fill: #ffab00;
+          stroke: #fff;
+      }
+
+      .line {
+          fill: none;
+          stroke: #ffab00;
+          stroke-width: 3;
+      }
+
       path.link {
         fill: none;
 
@@ -59,6 +142,43 @@
         pointer-events: none;
       }
 
+      body {
+        font: 11px sans-serif;
+        text-align: center;
+      }
+
+      .legend {
+        font-family: Consolas, courier;
+      }
+      rect.bordered {
+        stroke: #E6E6E6;
+        stroke-width:2px;
+      }
+
+      text.mono {
+        font-size: 9pt;
+        font-family: Consolas, courier;
+        fill: #aaa;
+      }
+
+      .title {
+        font-family: Consolas, courier;
+        font-size:16pt;
+        fill: #000f;
+        text-align: center;
+      }
+
+      .axis{
+        fill: #000;
+        stroke-width:0px;
+        font-family: Consolas, courier;
+        fill: #aaa;
+        font-size: 10pt;
+      }
+
+
+
+
       @media only screen and (max-width:680px) {
         /* For mobile phones: */
       }
@@ -70,8 +190,17 @@
   <div id="area3"></div>
   <div id="area4"></div>
   <div id="area5"></div>
+  <div id="area6">
+    <div id="title1"></div>
+    <div id="dropdown"></div>
+  </div>
+  <div id="area7">
+    <svg id="area1" class="mainChart" width="760" height="200"></svg>
+    <svg id="area2" class="detailsChart" width="200" height="200"></svg>
+  </div>
+  <svg id = "map" width="960" height="600"></svg>
   <body>
-    <script>
+    <script type="text/javascript">
       // get the data
       links =  [
         {
@@ -485,7 +614,7 @@
       };
     </script>
 
-    <script>
+    <script type="text/javascript">
       document.getElementById("area1").style.pageBreakAfter = "always";
       document.getElementById("area2").style.pageBreakAfter = "always";
       document.getElementById("area3").style.pageBreakAfter = "always";
@@ -1056,6 +1185,612 @@
 
       });
     </script>
+
+    <script type="text/javascript">
+      var margin = {top: 30, right: 70, bottom:70, left: 70},
+        width = 600 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom,
+        colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+        boroughs = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island'],
+        crime = ['Assault', 'Burglary', 'Housing', 'Murder', 'Robbery', 'Shooting'],
+        years = [2011,2012,2013,2014,2015],
+        xDomain = crime,
+        yDomain = boroughs,
+        x = d3.scaleBand().domain(crime).range([0,width-margin.left-margin.right]),
+        y = d3.scaleBand().domain(boroughs).range([0,height-margin.top-margin.bottom]),
+        year = 2011,
+        p = 2,
+        arr = [],
+        arrLength = 0;
+
+
+      var title1 = d3.select("#title1")
+        .attr("width", (width+margin.left+margin.right))
+        .attr("height", (margin.top*4))
+        .append("g")
+        ;
+      var select3 = d3.select("#dropdown")
+        .attr("width", (width+margin.left+margin.right))
+        .attr("height", (margin.top*4))
+        .append("g")
+        .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
+
+      var select = select3
+        .append('select')
+          .attr('class','select')
+          .on('change',onchange)
+
+
+      var options = select
+        .selectAll('option')
+        .data(years).enter()
+        .append('option')
+          .text(function (d) { return d; });
+
+      function onchange() {
+        selectValue = d3.select('select').property('value')
+        year = (selectValue);
+        display2();
+      };
+
+      var svg = d3.select("#area6").append("svg")
+        .attr("width", (width+margin.left+margin.right))
+        .attr("height", (height+margin.top+margin.bottom))
+        .append("g")
+        .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
+
+      var xAxis = d3.axisBottom()
+        .tickSize(0)
+        .scale(x);
+
+      var yAxis = d3.axisLeft()
+        .tickSize(0)
+        .scale(y);
+
+      var colorScale = d3.scaleQuantile().range(colors);
+
+      var colorDomain; // generated dynamically
+
+
+      svg.append("text")
+          .attr("class", "mono")
+         .attr("x",-5)
+         .attr("y",10)
+         .attr("text-anchor","end")
+         .text("Borough");
+
+      svg.append("text")
+          .attr("x", width-100)
+          .attr("y", height-margin.bottom)
+          .attr("text-anchor","end")
+          .attr("class", "mono")
+          .text("Crime");
+
+      title1.append("text")
+         .attr("x",200)
+         .attr("y",200)
+         .attr("text-anchor","start")
+         .attr("class", "title")
+         .text("Crimes in New York City");
+
+
+      var legend1 = svg.selectAll(".legend2").append("g")
+          .data(colors)
+        .enter().append("g")
+          .attr("class", "legend2");
+
+
+      legend1.append("rect")
+          .attr("x", function(d, i) {
+            return x.bandwidth()/2*i + 30})
+          .attr("y", height-(10))
+          .attr("width", x.bandwidth()/2)
+          .attr("height", y.bandwidth() / 6)
+          .style("fill", function(d){
+            return d});
+
+      svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (height) + ")")
+        .call(xAxis)
+        .selectAll("text")
+          .attr("transform", "rotate(270)")
+          .attr("x", function(d,i){
+            return margin.bottom-30;
+          })
+          .attr("y",0)
+          .style("text-anchor", "start");
+
+      svg.append("g").attr("class", "axis").call(yAxis);
+
+
+      svg.append("text")
+        .attr("x", width/4)
+        .attr("y", height-20)
+        .attr("dy", "0.35em")
+        .attr("class", "mono")
+        .text(function(d){
+          return "No. of Crimes";
+        });
+
+
+      var map11 = d3.map();
+      var map12 = d3.map();
+      var map13 = d3.map();
+      var map14 = d3.map();
+      var map15 = d3.map();
+      var map = d3.map();
+
+
+      const data = d3.csv("Q4/heatmap.csv", function(d){
+        if(parseInt(d.Year)==2011){
+          map11.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2012){
+          map12.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2013){
+          map13.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2014){
+          map14.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2015){
+          map15.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+      });
+
+      data.then(function(){
+        display2();
+        return display2();
+      })
+
+      function display2(){
+        var processed = [];
+        picker = year;
+        for (index=0; index < crime.length; index++){
+          for(borough=0; borough<boroughs.length;borough++){
+            var count = 0
+
+            if(picker==2011){count = map11.get(crime[index])[borough]}
+            else if(picker==2012){count = map12.get(crime[index])[borough]}
+            else if(picker==2013){count = map13.get(crime[index])[borough]}
+            else if(picker==2014){count = map14.get(crime[index])[borough]}
+            else if(picker==2015){count = map15.get(crime[index])[borough]}
+            processed.push({'borough':boroughs[borough],'crime':crime[index],'count':count});
+          }
+        };
+
+        colorDomain = d3.extent(processed, function(entry){
+          return parseInt(entry.count);});
+        colorScale.domain(d3.range(colorDomain[0],colorDomain[1]));
+
+        var rects = svg.selectAll(".heatmap").data(processed);//cvg was canvas
+
+        //console.log(legend);
+        rects.enter().append("rect").attr("class","heatmap");
+        rects.exit().transition().duration(1000).remove();
+
+        rects.transition().duration(1000)
+          .attr("x", function(d) {
+            return x(d.crime) + p / 2; })
+          .attr("y", function(d) { return y(d.borough) + p / 2; })
+          .attr("width", x.bandwidth() - p)
+          .attr("height", y.bandwidth() - p)
+          .attr("class", "heatmap bordered")
+          .style("fill", function(d) {
+            //console.log(d.count, colorScale(d.count));
+            return colorScale(d.count); });
+
+        var list2 = Object.values(colorScale.quantiles());
+        list2.unshift(0);
+
+        var legend = svg.selectAll(".legend").data(list2);
+
+        legend.exit().remove();
+
+        legend.enter().append("text")
+          .attr("class", "legend")
+          .attr("x", function(d, i) {
+            return x.bandwidth()/2*i + 20})
+          .attr("y", height+5)
+          .attr("dy", ".35em")
+          .attr("dx", "1em")
+          .style("text-anchor", "start")
+          .merge(legend)
+            .text(function(d){
+            return parseInt(d);
+          });
+        }
+
+    </script>
+
+    <script type="text/javascript">
+      var data = [{country: 'Bangladesh', population_2012: 105905297, growth: {year_2013:42488 , year_2014:934 , year_2015:52633 , year_2016:112822 , year_2017:160792}},
+        {country: 'Ethopia', population_2012: 75656319, growth: {year_2013:1606010 , year_2014:1606705 , year_2015:1600666 , year_2016:1590077 , year_2017:1580805}},
+        {country: 'Kenya', population_2012: 33007327, growth: {year_2013:705153 , year_2014:703994 , year_2015:699906 , year_2016:694295 , year_2017:687910}},
+        {country: 'Afghanistan', population_2012: 23280573, growth: {year_2013:717151 , year_2014:706082 , year_2015:665025 , year_2016:616262 , year_2017:573643}},
+        {country: 'Morocco', population_2012: 13619520, growth: {year_2013:11862 , year_2014:7997 , year_2015:391 , year_2016:-8820 , year_2017:-17029}}];
+
+        yearText = [2013, 2014, 2015, 2015, 2016, 2017],
+        countryNameList = [],
+        countryPopList = [],
+        yearList = Object.keys(data[0]['growth']);
+
+      ///make a list (countryNameList) of all of the the countries
+      //Make a list (countryPopList) of key-value objects (Country Name : Population_2012)
+      //make a list (yearList) of all of the years ('year_2013')
+      for (var index = 0; index < data.length; index++){
+        countryNameList.push(data[index]['country']);
+        countryPopList.push({name:data[index]['country'],value:data[index]['population_2012']});
+      }
+
+      //make svg element and set width, height, and margins
+      var svg = d3.select("svg"),
+        margin = {top: 20, right: 30, bottom: 30, left: 100},
+        axisMargin = 20,
+        valueMargin = 4,
+        width = +svg.attr("width") - margin.left - margin.right,
+        height = +svg.attr("height") - margin.top - margin.bottom,
+        barHeight = (height-axisMargin*2)*0.2/data.length,
+        labelWidth =0;
+      //make the x and y scales
+      var x = d3.scaleLinear().range([0, width]);
+      var y = d3.scaleBand().range([height, 0]);
+      var g = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      //iterate over all elements and get their population at the end of the time period
+      for (var i = 0; i < data.length; i++){
+        var pop = countryPopList[i]['value'];
+        for(var p = 0; p < yearList.length; p++){
+          pop = pop + data[i]['growth'][yearList[p]];
+        }
+        countryPopList[i]['value'] = pop;
+      }
+
+      countryPopList.sort(function(a, b) {
+        return a.value - b.value; });
+
+      x.domain([0, d3.max(countryPopList, function(d) { return d.value; })]);
+      y.domain(countryPopList.map(function(d) { return d.name; })).padding(0.1);
+
+      g.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")");
+
+      g.selectAll(".bar")
+        .data(countryPopList)
+        .enter().append("rect")
+          .attr("class", "bar")
+          .attr("x", 0)
+          .attr("height", y.bandwidth()*.9)
+          .attr("y", function(d) {
+            return y(d.name); })
+          .attr("width", function(d) {
+            return x(d.value); })
+            .on("mouseover", function(d){
+              display(d.name);
+            })
+            .on("mouseout", function(d){
+              hide();
+
+            });
+
+      var labelWidth = {};
+      svg.selectAll(".text")
+        .data(countryPopList)
+        .enter()
+        .append("text")
+        .attr("class", "labelBig")
+        .attr("x", function(d) {return x(d.value)+margin.left;} )
+        .attr("y", function(d) {
+          return y(d.name)+margin.top+(barHeight*2);} )
+        .attr("dy", "0.75em")
+        .text(function(d){return (d3.format(',')(d.value));})
+        .each(function(d,i){
+          labelWidth[d.name] = this.getComputedTextLength();
+          this.remove();
+        });
+
+      svg.selectAll(".text")
+        .data(countryPopList)
+        .enter()
+        .append("text")
+        .attr("class", "labelBig")
+        .attr("x", function(d) {
+          return x(d.value)+margin.left-labelWidth[d.name]-5;} )
+        .attr("y", function(d) {
+          return y(d.name)+margin.top+(barHeight*2);} )
+        .attr("dy", "0.75em")
+        .text(function(d){return (d3.format(',')(d.value));});
+
+      var textWidth = {};
+
+      svg.selectAll(".text")
+        .data(countryPopList)
+        .enter()
+        .append("text")
+        .attr("class", "labelBig")
+        .attr("x", function(d) {margin.left;} )
+        .attr("y", function(d) {
+          return y(d.name)+margin.top+barHeight*2;} )
+        .attr("dy", "0.75em")
+        .text(function(d){return d.name;})
+          .each(function(d,i){
+            textWidth[d.name] = this.getComputedTextLength();
+            this.remove();
+          });
+
+      svg.selectAll(".text")
+        .data(countryPopList)
+        .enter()
+        .append("text")
+        .attr("class", "labelBig")
+        .attr("x", function(d) {
+           return  margin.left-textWidth[d.name]-5;})
+        .attr("y", function(d) {
+          return y(d.name)+margin.top+barHeight*2;} )
+        .attr("dy", "0.75em")
+        .text(function(d){return d.name;});
+
+
+      var hide = function(){
+        d3.select("#area2").selectAll("*").remove();
+      }
+
+      var display = function(country){
+        d3.select("#area2").selectAll("*").remove();
+        countryIndex = 0;
+
+        for(var p=0; p< data.length;p++){
+          if(country == data[p]['country']){
+            countryIndex=p;
+          }
+        }
+        //get beginning population (population_2012) of the selected country
+        //Build list of the annual growth rate
+        currentPop = data[countryIndex]['population_2012'];
+        growthRate=0.0
+        growthRateList=[];
+        for(var d=0; d<yearList.length;d++){
+        currentPop = currentPop + data[countryIndex]['growth'][yearList[d]];
+        growthRate = data[countryIndex]['growth'][yearList[d]]/currentPop * 100;
+        growthRateList.push({year:d3.timeParse("%Y")(parseInt((yearList[d]).slice(5))), rate:growthRate});
+        }
+
+        // set the dimensions and margins of the graph
+        var margin = {top: 25, right: 20, bottom: 20, left: 30},
+          width = 200 - margin.left - margin.right,
+          height = 200 - margin.top - margin.bottom;
+
+        // set the ranges
+        var x = d3.scaleTime().domain([
+          d3.min(growthRateList,function(d){return (d.year);}),
+          d3.max(growthRateList, function(d){return (d.year);})])
+          .range([0, width]);
+
+            //var x = d3.scaleOrdinal().domain([2013,2017])
+            //  .range([0, width]);
+
+        var y = d3.scaleLinear()
+          .domain([d3.min(growthRateList,function(d){return d.rate;}),
+            d3.max(growthRateList,function(d){return d.rate;})])
+          .range([height, 0]);
+
+        // define the line
+        var valueline = d3.line()
+          .x(function(d) {return x(d.year);})
+          .y(function(d) {return y(d.rate);})
+          .curve(d3.curveMonotoneX) ;
+
+        // append the svg obgect to the body of the page
+        // appends a 'group' element to 'svg'
+        // moves the 'group' element to the top left margin
+        var svg = d3.select("#area2")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        // Add the valueline path.
+        svg.append("path")
+          .datum(growthRateList)
+          .attr("class", "line")
+          .attr("d", valueline);
+
+        svg.selectAll(".dot")
+          .data(growthRateList)
+          .enter().append("circle") // Uses the enter().append() method
+            .attr("class", "dot") // Assign a class for styling
+            .attr("cx", function(d) { return x(d.year) })
+            .attr("cy", function(d) { return y(d.rate) })
+            .attr("r", 5);
+
+        // Add the X Axis
+        var xAxis = d3.axisBottom(x)
+          .ticks(d3.timeYear)
+          .tickFormat(d3.timeFormat("%Y"));
+
+        svg.append("g")
+          .call(xAxis)
+          .attr("transform", "translate(0," + height + ")");
+
+        // Add the Y Axis
+        svg.append("g")
+          .call(d3.axisLeft(y));
+
+        svg.append("text")
+          .attr("class", "labelSmall")
+          .attr("x", width+15)
+          .attr("y", height-10)
+          .style("text-anchor", "end")
+          .text("Year");
+
+        labelLenght=0
+        svg.append("text")
+          .attr("class", "labelSmall")
+          .attr("x", width/2)
+          .attr("y", -10)
+          .style("text-anchor", "end")
+          .text(function(d){
+            return "% Pop. change in: "+country;
+          }).each(function(d,i){
+
+            labelLength = this.getComputedTextLength();
+            console.log(labelLength);
+            this.remove();
+        });
+
+        svg.append("text")
+          .attr("class", "labelSmall")
+          .attr("x", width/2 +labelLength/2)
+          .attr("y", -15)
+          .style("text-anchor", "end")
+          .text(function(d){
+            return "% Pop. change in: "+country;
+          });
+
+        svg.append("text")
+          .attr("class", "labelSmall")
+          .attr("y", -10)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Pct %");
+      }
+
+
+
+    </script>
+
+    <script type="text/javascript">
+      var header = d3.select("#map").append("h2")
+          .attr("class")
+
+      var div = d3.select("body").append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 0);
+
+      var svg = d3.select("svg"),
+          width = +svg.attr("width"),
+          height = +svg.attr("height");
+
+      svg.append("text")
+              .attr("x", (width / 2))
+              .attr("y", 20)
+              .attr("text-anchor", "middle")
+              .style("font-size", "22px")
+              .text("Choropleth Map of County Data");
+
+      svg.append("text")
+              .attr("x", width - 75)
+              .attr("y", height-210)
+              .attr("text-anchor", "middle")
+              .style("font-size", "22px")
+              .text("Poverty Rate");
+
+      var promises = [
+        d3.json("Q6/us.json"),
+        d3.csv("Q6/county_detail.csv", function(cd){
+          cd.TotalPop = +cd.TotalPop;
+          cd.IncomePerCap = +cd.IncomePerCap;
+          county_detail.set(cd.CensusId, [cd.TotalPop, cd.IncomePerCap]);
+        }),
+        d3.csv("Q6/county_poverty.csv", function(cp){
+           cp.Poverty = +cp.Poverty;
+           county_poverty.set(cp.CensusId, [cp.State, cp.County, cp.Poverty]);
+        })];
+
+      Promise.all(promises).then(ready);
+
+      var county_detail = d3.map();
+      var county_poverty = d3.map();
+      var path = d3.geoPath();
+      var x = d3.scaleLinear()
+        .domain([1,10])
+        .rangeRound([600,860]);
+
+      var color = d3.scaleThreshold()
+        .domain(d3.range(2,10))
+        .range(d3.schemeBlues[9]);
+
+      var g = svg.append("g")
+        .attr("class", "key")
+        .attr("transform", "translate(0,40)");
+
+      g.append("text")
+        .attr("class", "caption")
+        .attr("x", x.range()[0])
+        .attr("y", -6)
+        .attr("fill", "#000")
+        .attr("text-anchor", "start");
+
+      var legend1 = svg.selectAll(".legend")
+        .data(color.domain())
+        .enter().append("g")
+          .attr("class", "legend")
+          .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+
+      legend1.append("rect")
+        .attr("x", width - 80)
+        .attr("y", height - 200)
+        .attr("width", 18)
+        .attr("height", 18)
+          .style("fill", function(d){return color(d)});
+
+          // draw legend text
+      legend1.append("text")
+        .attr("x", width - 85)
+        .attr("y", height-190)
+        .attr("dy", ".35em")
+          .style("text-anchor", "end")
+          .text(function(d,i){
+            console.log(i);
+            var sign = "";
+            if(i==0){
+              sign = "<"
+            } else if(i==7){
+              sign = ">"
+            }
+            return sign + d + "%";})
+
+      var tip = d3.tip()
+        .attr('class','d3-tip')
+        .offset([-10,0])
+        .html(function(d){
+          return "State: "
+          + county_poverty.get(d.id)[0]
+          + "<br/>County: "+ county_poverty.get(d.id)[1]
+          + "<br/>Poverty Rate: "
+          +  d.rate + "%<br/>Total Population: "
+          +  d3.format(',')(county_detail.get(d.id)[0])
+          + "<br/>Income per capita: "
+          +  d3.format(',')(county_detail.get(d.id)[1]);
+      });
+
+      svg.call(tip);
+
+      function ready([us]) {
+        svg.append("g")
+          .attr("class", "counties")
+          .selectAll("path")
+          .data(topojson.feature(us, us.objects.counties).features)
+          .enter().append("path")
+          .attr("fill", function(d) {
+              return color(d.rate = county_poverty.get(d.id)[2]); })
+          .attr("d", path)
+          .on("mouseover",tip.show)
+          .on("mouseout", tip.hide)
+
+        svg.append("path")
+          .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b; }))
+          .attr("class", "counties")
+          .attr("d", path);
+
+        svg.append("path")
+          .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+          .attr("class", "states")
+          .attr("d", path);
+      }
+
+	  </script>
 
   </body>
 </html>
