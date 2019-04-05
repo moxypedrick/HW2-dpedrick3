@@ -1423,7 +1423,7 @@
         .attr("class", "labelBig")
         .attr("x", function(d) {return x7(d.value)+margin7.left;} )
         .attr("y", function(d) {
-          return y7(d.name)+margin7.top+(barHeigh7t*2);} )
+          return y7(d.name)+margin7.top+(barHeigh7*2);} )
         .attr("dy", "0.75em")
         .text(function(d){return (d3.format(',')(d.value));})
         .each(function(d,i){
@@ -1598,7 +1598,6 @@
           .style("text-anchor", "end")
           .text("Pct %");
       }
-
 
 
     </script>
