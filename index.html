@@ -492,9 +492,9 @@
       var path = svg1.append("g")
         .selectAll("path")
         .data(links)
-        .enter()
-        .append("path")
-        .attr("class", function(d) { return "link " + d.type; });
+          .enter()
+          .append("path")
+          .attr("class", function(d) { return "link " + d.type; });
 
 
       // define the nodes
@@ -542,38 +542,38 @@
 
       // add the curvy lines
       function tick() {
-          path.attr("d", function(d) {
-              var dx = d.target.x - d.source.x,
-                  dy = d.target.y - d.source.y,
-                  dr = Math.sqrt(dx * dx + dy * dy);
-              return "M" +
-                  d.source.x + "," +
-                  d.source.y + "A" +
-                  dr + "," + dr + " 0 0,1 " +
-                  d.target.x + "," +
-                  d.target.y;
-          });
+        path.attr("d", function(d) {
+          var dx = d.target.x - d.source.x,
+              dy = d.target.y - d.source.y,
+              dr = Math.sqrt(dx * dx + dy * dy);
+          return "M" +
+              d.source.x + "," +
+              d.source.y + "A" +
+              dr + "," + dr + " 0 0,1 " +
+              d.target.x + "," +
+              d.target.y;
+        });
 
-          path.attr("stroke", function(d) {
-            //console.log(d.index)
-            if(d.value == 0){
+        path.attr("stroke", function(d) {
+          //console.log(d.index)
+          if(d.value == 0){
 
-              return "#ADF7B6";
-            } else if(d.value == 1){
-              return "#79ADDC";
-            }
-          });
+            return "#ADF7B6";
+          } else if(d.value == 1){
+            return "#79ADDC";
+          }
+        });
 
-          path.attr("stroke-width", function(d){
-            if(d.value == 0){
-              return 4;
-            } else if(d.value == 1){
-              return 2;
-            }
-          });
+        path.attr("stroke-width", function(d){
+          if(d.value == 0){
+            return 4;
+          } else if(d.value == 1){
+            return 2;
+          }
+        });
 
-          node.attr("transform", function(d) {
-              return "translate(" + d.x + "," + d.y + ")"; });
+        node.attr("transform", function(d) {
+            return "translate(" + d.x + "," + d.y + ")"; });
       };
 
       function dragstarted(d) {
@@ -1423,7 +1423,7 @@
         .attr("class", "labelBig")
         .attr("x", function(d) {return x7(d.value)+margin7.left;} )
         .attr("y", function(d) {
-          return y7(d.name)+margin7.top+(barHeigh7*2);} )
+          return y7(d.name)+margin7.top+(barHeight7*2);} )
         .attr("dy", "0.75em")
         .text(function(d){return (d3.format(',')(d.value));})
         .each(function(d,i){
