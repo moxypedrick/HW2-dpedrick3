@@ -184,19 +184,19 @@
       }
     </style>
   </head>
-  <div id="areaz"></div>
-  <div id="area1"></div>
-  <div id="area2"></div>
-  <div id="area3"></div>
-  <div id="area4"></div>
-  <div id="area5"></div>
-  <div id="area6">
+  <div id="areaz" style="position:static"></div>
+  <div id="area1" style="position:static"></div>
+  <div id="area2" style="position:static"></div>
+  <div id="area3" style="position:static"></div>
+  <div id="area4" style="position:static"></div>
+  <div id="area5" style="position:static"></div>
+  <div id="area6" style="position:static">
     <div id="title1"></div>
     <div id="dropdown"></div>
   </div>
-  <div id="area7">
-    <svg id="area1" class="mainChart" width="760" height="200"></svg>
-    <svg id="area2" class="detailsChart" width="200" height="200"></svg>
+  <div id="area7" style="position:static">
+    <svg id="area7-1" class="mainChart" width="760" height="200"></svg>
+    <svg id="area7-1" class="detailsChart" width="200" height="200"></svg>
   </div>
   <div id="area8" style="position:static">
     <svg id = "map" width="960" height="600"></svg>
@@ -1533,11 +1533,11 @@
 
 
       var hide = function(){
-        d3.select("#area2").selectAll("*").remove();
+        d3.select("#area7-2").selectAll("*").remove();
       }
 
       var display = function(country){
-        d3.select("#area2").selectAll("*").remove();
+        d3.select("#area7-2").selectAll("*").remove();
         countryIndex = 0;
 
         for(var p=0; p< data.length;p++){
@@ -1584,7 +1584,7 @@
         // append the svg obgect to the body of the page
         // appends a 'group' element to 'svg'
         // moves the 'group' element to the top left margin
-        var svg = d3.select("#area2")
+        var svg = d3.select("#area7-2")
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
