@@ -1721,14 +1721,14 @@
           .enter().append("path")
           .attr("fill", function(d) {
               return color8(d.rate = county_poverty.get(d.id)[2]); })
-          .attr("d", path)
+          .attr("d", path8)
           .on("mouseover",tip8.show)
           .on("mouseout", tip8.hide)
 
         svg8.append("path")
           .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b; }))
           .attr("class", "counties")
-          .attr("d", path);
+          .attr("d", path8);
 
         svg8.append("path")
           .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
