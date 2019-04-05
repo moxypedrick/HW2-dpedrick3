@@ -1354,7 +1354,7 @@
         yearText = [2013, 2014, 2015, 2015, 2016, 2017],
         countryNameList = [],
         countryPopList = [],
-        yearList = Object.keys(data[0]['growth']);
+        yearList = Object.keys(data7[0]['growth']);
 
       ///make a list (countryNameList) of all of the the countries
       //Make a list (countryPopList) of key-value objects (Country Name : Population_2012)
@@ -1655,7 +1655,7 @@
         .domain(d3.range(2,10))
         .range(d3.schemeBlues[9]);
 
-      var g8 = svg.append("g")
+      var g8 = svg8.append("g")
         .attr("class", "key")
         .attr("transform", "translate(0,40)");
 
