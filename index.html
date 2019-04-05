@@ -1366,18 +1366,18 @@
 
       //make svg element and set width, height, and margins
       var svg7 = d3.select("#area7-1"),
-        margin = {top: 20, right: 30, bottom: 30, left: 100},
-        axisMargin = 20,
-        valueMargin = 4,
-        width = +svg7.attr("width") - margin.left - margin.right,
-        height = +svg7.attr("height") - margin.top - margin.bottom,
-        barHeight = (height-axisMargin*2)*0.2/data7.length,
-        labelWidth =0;
+        margin7 = {top: 20, right: 30, bottom: 30, left: 100},
+        axisMargin7 = 20,
+        valueMargin7 = 4,
+        width7 = +svg7.attr("width") - margin7.left - margin7.right,
+        height7 = +svg7.attr("height") - margin7.top - margin7.bottom,
+        barHeight7 = (height7-axisMargin7*2)*0.2/data7.length,
+        labelWidth7 =0;
       //make the x and y scales
-      var x = d3.scaleLinear().range([0, width]);
-      var y = d3.scaleBand().range([height, 0]);
-      var g = svg7.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      var x7 = d3.scaleLinear().range([0, width7]);
+      var y7 = d3.scaleBand().range([height7, 0]);
+      var g7 = svg7.append("g")
+        .attr("transform", "translate(" + margin7.left + "," + margin7.top + ")");
 
       //iterate over all elements and get their population at the end of the time period
       for (var i = 0; i < data7.length; i++){
@@ -1391,19 +1391,19 @@
       countryPopList.sort(function(a, b) {
         return a.value - b.value; });
 
-      x.domain([0, d3.max(countryPopList, function(d) { return d.value; })]);
-      y.domain(countryPopList.map(function(d) { return d.name; })).padding(0.1);
+      x7.domain([0, d3.max(countryPopList, function(d) { return d.value; })]);
+      y7.domain(countryPopList.map(function(d) { return d.name; })).padding(0.1);
 
-      g.append("g")
+      g7.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")");
 
-      g.selectAll(".bar")
+      g7.selectAll(".bar")
         .data(countryPopList)
         .enter().append("rect")
           .attr("class", "bar")
           .attr("x", 0)
-          .attr("height", y.bandwidth()*.9)
+          .attr("height", y7.bandwidth()*.9)
           .attr("y", function(d) {
             return y(d.name); })
           .attr("width", function(d) {
@@ -1413,22 +1413,21 @@
             })
             .on("mouseout", function(d){
               hide();
-
             });
 
-      var labelWidth = {};
+      var labelWidth7 = {};
       svg7.selectAll(".text")
         .data(countryPopList)
         .enter()
         .append("text")
         .attr("class", "labelBig")
-        .attr("x", function(d) {return x(d.value)+margin.left;} )
+        .attr("x", function(d) {return x7(d.value)+margin7.left;} )
         .attr("y", function(d) {
-          return y(d.name)+margin.top+(barHeight*2);} )
+          return y7(d.name)+margin7.top+(barHeigh7t*2);} )
         .attr("dy", "0.75em")
         .text(function(d){return (d3.format(',')(d.value));})
         .each(function(d,i){
-          labelWidth[d.name] = this.getComputedTextLength();
+          labelWidth7[d.name] = this.getComputedTextLength();
           this.remove();
         });
 
@@ -1438,26 +1437,26 @@
         .append("text")
         .attr("class", "labelBig")
         .attr("x", function(d) {
-          return x(d.value)+margin.left-labelWidth[d.name]-5;} )
+          return x7(d.value)+margin7.left-labelWidth7[d.name]-5;} )
         .attr("y", function(d) {
-          return y(d.name)+margin.top+(barHeight*2);} )
+          return y7(d.name)+margin7.top+(barHeight7*2);} )
         .attr("dy", "0.75em")
         .text(function(d){return (d3.format(',')(d.value));});
 
-      var textWidth = {};
+      var textWidth7 = {};
 
       svg7.selectAll(".text")
         .data(countryPopList)
         .enter()
         .append("text")
         .attr("class", "labelBig")
-        .attr("x", function(d) {margin.left;} )
+        .attr("x", function(d) {margin7.left;} )
         .attr("y", function(d) {
-          return y(d.name)+margin.top+barHeight*2;} )
+          return y7(d.name)+margin7.top+barHeight7*2;} )
         .attr("dy", "0.75em")
         .text(function(d){return d.name;})
           .each(function(d,i){
-            textWidth[d.name] = this.getComputedTextLength();
+            textWidth7[d.name] = this.getComputedTextLength();
             this.remove();
           });
 
@@ -1467,9 +1466,9 @@
         .append("text")
         .attr("class", "labelBig")
         .attr("x", function(d) {
-           return  margin.left-textWidth[d.name]-5;})
+           return  margin7.left-textWidth7[d.name]-5;})
         .attr("y", function(d) {
-          return y(d.name)+margin.top+barHeight*2;} )
+          return y(d.name)+margin7.top+barHeight*2;} )
         .attr("dy", "0.75em")
         .text(function(d){return d.name;});
 
@@ -1499,69 +1498,69 @@
         }
 
         // set the dimensions and margins of the graph
-        var margin = {top: 25, right: 20, bottom: 20, left: 30},
-          width = 200 - margin.left - margin.right,
-          height = 200 - margin.top - margin.bottom;
+        var margin72 = {top: 25, right: 20, bottom: 20, left: 30},
+          width72 = 200 - margin.left - margin.right,
+          height72 = 200 - margin.top - margin.bottom;
 
         // set the ranges
-        var x = d3.scaleTime().domain([
+        var x72 = d3.scaleTime().domain([
           d3.min(growthRateList,function(d){return (d.year);}),
           d3.max(growthRateList, function(d){return (d.year);})])
-          .range([0, width]);
+          .range([0, width72]);
 
             //var x = d3.scaleOrdinal().domain([2013,2017])
             //  .range([0, width]);
 
-        var y = d3.scaleLinear()
+        var y72 = d3.scaleLinear()
           .domain([d3.min(growthRateList,function(d){return d.rate;}),
             d3.max(growthRateList,function(d){return d.rate;})])
-          .range([height, 0]);
+          .range([height72, 0]);
 
         // define the line
-        var valueline = d3.line()
-          .x(function(d) {return x(d.year);})
-          .y(function(d) {return y(d.rate);})
+        var valueline72 = d3.line()
+          .x(function(d) {return x72(d.year);})
+          .y(function(d) {return y72(d.rate);})
           .curve(d3.curveMonotoneX) ;
 
-        // append the svg obgect to the body of the page
+        // append the svg object to the body of the page
         // appends a 'group' element to 'svg'
         // moves the 'group' element to the top left margin
-        var svg7 = d3.select("#area7-1")
+        var svg72 = d3.select("#area7-2")
           .append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
+          .attr("width", width72 + margin72.left + margin72.right)
+          .attr("height", height72 + margin72.top + margin72.bottom)
           .append("g")
           .attr("transform",
-                "translate(" + margin.left + "," + margin.top + ")");
+                "translate(" + margin72.left + "," + margin72.top + ")");
 
         // Add the valueline path.
-        svg7.append("path")
+        svg72.append("path")
           .datum(growthRateList)
           .attr("class", "line")
           .attr("d", valueline);
 
-        svg7.selectAll(".dot")
+        svg72.selectAll(".dot")
           .data(growthRateList)
           .enter().append("circle") // Uses the enter().append() method
             .attr("class", "dot") // Assign a class for styling
-            .attr("cx", function(d) { return x(d.year) })
-            .attr("cy", function(d) { return y(d.rate) })
+            .attr("cx", function(d) { return x72(d.year) })
+            .attr("cy", function(d) { return y72(d.rate) })
             .attr("r", 5);
 
         // Add the X Axis
-        var xAxis = d3.axisBottom(x)
+        var xAxis72 = d3.axisBottom(x72)
           .ticks(d3.timeYear)
           .tickFormat(d3.timeFormat("%Y"));
 
-        svg7.append("g")
-          .call(xAxis)
+        svg72.append("g")
+          .call(xAxis72)
           .attr("transform", "translate(0," + height + ")");
 
         // Add the Y Axis
-        svg7.append("g")
-          .call(d3.axisLeft(y));
+        svg72.append("g")
+          .call(d3.axisLeft(y72));
 
-        svg7.append("text")
+        svg72.append("text")
           .attr("class", "labelSmall")
           .attr("x", width+15)
           .attr("y", height-10)
@@ -1569,9 +1568,9 @@
           .text("Year");
 
         labelLenght=0
-        svg7.append("text")
+        svg72.append("text")
           .attr("class", "labelSmall")
-          .attr("x", width/2)
+          .attr("x", width72/2)
           .attr("y", -10)
           .style("text-anchor", "end")
           .text(function(d){
@@ -1583,7 +1582,7 @@
             this.remove();
         });
 
-        svg7.append("text")
+        svg72.append("text")
           .attr("class", "labelSmall")
           .attr("x", width/2 +labelLength/2)
           .attr("y", -15)
@@ -1592,7 +1591,7 @@
             return "% Pop. change in: "+country;
           });
 
-        svg7.append("text")
+        svg72.append("text")
           .attr("class", "labelSmall")
           .attr("y", -10)
           .attr("dy", ".71em")
