@@ -360,8 +360,8 @@
 
         // set the dimensions and margins of the graph
         var margin72 = {top: 25, right: 20, bottom: 20, left: 30},
-          width72 = 200 - margin.left - margin.right,
-          height72 = 200 - margin.top - margin.bottom;
+          width72 = 200 - margin72.left - margin72.right,
+          height72 = 200 - margin72.top - margin72.bottom;
 
         // set the ranges
         var x72 = d3.scaleTime().domain([
@@ -423,8 +423,8 @@
 
         svg72.append("text")
           .attr("class", "labelSmall")
-          .attr("x", width+15)
-          .attr("y", height-10)
+          .attr("x", width72+15)
+          .attr("y", height72-10)
           .style("text-anchor", "end")
           .text("Year");
 
@@ -445,7 +445,7 @@
 
         svg72.append("text")
           .attr("class", "labelSmall")
-          .attr("x", width/2 +labelLength/2)
+          .attr("x", width72/2 +labelLength72/2)
           .attr("y", -15)
           .style("text-anchor", "end")
           .text(function(d){
