@@ -1604,28 +1604,30 @@
 
 
     </script>
+
+
     <script type="text/javascript">
-      var header = d3.select("#map").append("h2")
+      var header8 = d3.select("#map").append("h2")
           .attr("class")
 
-      var div = d3.select("#area8").append("div")
+      var div8 = d3.select("#area8").append("div")
           .attr("class", "tooltip")
           .style("opacity", 0);
 
       var svg8 = d3.select("#map"),
-          width = +svg8.attr("width"),
-          height = +svg8.attr("height");
+          width8 = +svg8.attr("width"),
+          height8 = +svg8.attr("height");
 
       svg8.append("text")
-              .attr("x", (width / 2))
+              .attr("x", (width8 / 2))
               .attr("y", 20)
               .attr("text-anchor", "middle")
               .style("font-size", "22px")
               .text("Choropleth Map of County Data");
 
       svg8.append("text")
-              .attr("x", width - 75)
-              .attr("y", height-210)
+              .attr("x", width8 - 75)
+              .attr("y", height8-210)
               .attr("text-anchor", "middle")
               .style("font-size", "22px")
               .text("Poverty Rate");
@@ -1646,12 +1648,12 @@
 
       var county_detail = d3.map();
       var county_poverty = d3.map();
-      var path = d3.geoPath();
-      var x = d3.scaleLinear()
+      var path8 = d3.geoPath();
+      var x8 = d3.scaleLinear()
         .domain([1,10])
         .rangeRound([600,860]);
 
-      var color = d3.scaleThreshold()
+      var color8 = d3.scaleThreshold()
         .domain(d3.range(2,10))
         .range(d3.schemeBlues[9]);
 
@@ -1661,28 +1663,28 @@
 
       g8.append("text")
         .attr("class", "caption")
-        .attr("x", x.range()[0])
+        .attr("x", x8.range()[0])
         .attr("y", -6)
         .attr("fill", "#000")
         .attr("text-anchor", "start");
 
-      var legend1 = svg8.selectAll(".legend")
-        .data(color.domain())
+      var legend8 = svg8.selectAll(".legend")
+        .data(color8.domain())
         .enter().append("g")
           .attr("class", "legend")
           .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
 
-      legend1.append("rect")
-        .attr("x", width - 80)
-        .attr("y", height - 200)
+      legend8.append("rect")
+        .attr("x", width8 - 80)
+        .attr("y", height8 - 200)
         .attr("width", 18)
         .attr("height", 18)
           .style("fill", function(d){return color(d)});
 
           // draw legend text
-      legend1.append("text")
-        .attr("x", width - 85)
-        .attr("y", height-190)
+      legend8.append("text")
+        .attr("x", width8 - 85)
+        .attr("y", height8-190)
         .attr("dy", ".35em")
           .style("text-anchor", "end")
           .text(function(d,i){
@@ -1695,7 +1697,7 @@
             }
             return sign + d + "%";})
 
-      var tip = d3.tip()
+      var tip8 = d3.tip()
         .attr('class','d3-tip')
         .offset([-10,0])
         .html(function(d){
@@ -1709,7 +1711,7 @@
           +  d3.format(',')(county_detail.get(d.id)[1]);
       });
 
-      svg8.call(tip);
+      svg8.call(tip8);
 
       function ready([us]) {
         svg8.append("g")
@@ -1720,8 +1722,8 @@
           .attr("fill", function(d) {
               return color(d.rate = county_poverty.get(d.id)[2]); })
           .attr("d", path)
-          .on("mouseover",tip.show)
-          .on("mouseout", tip.hide)
+          .on("mouseover",tip8.show)
+          .on("mouseout", tip8.hide)
 
         svg8.append("path")
           .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b; }))
@@ -1731,7 +1733,7 @@
         svg8.append("path")
           .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
           .attr("class", "states")
-          .attr("d", path);
+          .attr("d", path8);
       }
 
     </script>
