@@ -185,11 +185,13 @@
     </style>
   </head>
   <div id="areaz" style="position:static"></div>
-  <div id="area1" style="position:static"></div>
-  <div id="area2" style="position:static"></div>
-  <div id="area3" style="position:static"></div>
-  <div id="area4" style="position:static"></div>
-  <div id="area5" style="position:static"></div>
+  <div id="#graph-body" style="position:static">
+    <div id="area1" style="position:static"></div>
+    <div id="area2" style="position:static"></div>
+    <div id="area3" style="position:static"></div>
+    <div id="area4" style="position:static"></div>
+    <div id="area5" style="position:static"></div>
+  </div>
   <div id="area6" style="position:static">
     <div id="title1"></div>
     <div id="dropdown"></div>
@@ -481,13 +483,13 @@
           .alphaTarget(1)
           .on("tick", tick);
 
-      var svg = d3.select("#areaz").append("svg")
+      var svg1 = d3.select("#areaz").append("svg")
           .attr("width", width)
           .attr("height", height);
 
       // add the links and the arrows
 
-      var path = svg.append("g")
+      var path = svg1.append("g")
         .selectAll("path")
         .data(links)
         .enter()
@@ -496,7 +498,7 @@
 
 
       // define the nodes
-      var node = svg.selectAll(".node")
+      var node = svg1.selectAll(".node")
           .data(force.nodes())
         .enter().append("g")
           .attr("class", "node")
@@ -659,15 +661,12 @@
           yScale5 = d3.scaleLog().clamp(true).range([height, 0]).nice(), // value -> display
           yMap5 = function(d) { return yScale5(yValue5(d));}, // data -> display
           yAxis5 = d3.axisLeft().scale(yScale5);
-
-
-
       //var shapeScale = d3.scaleOrdinal
 
-          var min = 200;
-          var max = null;
-          var symbols = d3.scaleOrdinal(d3.symbols);
-          var symbol = d3.symbol().size(100);
+      var min = 200;
+      var max = null;
+      var symbols = d3.scaleOrdinal(d3.symbols);
+      var symbol = d3.symbol().size(100);
       //get min and max. Take difference and place the current
       var sizeValue = function(d) { return d.Votes};
 
@@ -703,7 +702,7 @@
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       // add the tooltip area to the webpage
-      var tooltip = d3.select("body").append("div")
+      var tooltip = d3.select("#graph-body").append("div")
           .attr("class", "tooltip")
           .style("opacity", 0);
 
@@ -1014,30 +1013,30 @@
                .attr("text-anchor","middle")
                .text("Sqrt of Votes vs. Rating");
 
-
-
       chart4.append("g")
           .attr("class", "x axis")
           .attr("transform", "translate(0," + height + ")")
           .call(xAxis);
-        chart4.append("text")
-          .attr("class", "label")
-          .attr("x", width)
-          .attr("y", height-10)
-          .style("text-anchor", "end")
-          .text("Rating");
+
+      chart4.append("text")
+        .attr("class", "label")
+        .attr("x", width)
+        .attr("y", height-10)
+        .style("text-anchor", "end")
+        .text("Rating");
 
       // y-axis
       chart4.append("g")
           .attr("class", "y axis")
           .call(yAxis4);
-        chart4.append("text")
-          .attr("class", "label")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
-          .text("Votes");
+
+      chart4.append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Votes");
 
         // draw dots
         chart4.selectAll(".dot")
@@ -1072,41 +1071,43 @@
             });
 
             // draw legend
-            var legend4 = chart4.selectAll(".legend")
-                .data(['Good Rating','Bad Rating'])
-              .enter().append("g")
-                .attr("class", "legend")
-                .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
 
-               legend4.append("rect")
-                    .attr("x", width - 18)
-                    .attr("width", 18)
-                    .attr("height", 18)
-                    .style("fill", function(d){
-                      if(d=="Good Rating"){
-                        return 'blue'}
-                        else{return 'red'};
-                    });
+        var legend4 = chart4.selectAll(".legend")
+            .data(['Good Rating','Bad Rating'])
+          .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+
+        legend4.append("rect")
+          .attr("x", width - 18)
+          .attr("width", 18)
+          .attr("height", 18)
+          .style("fill", function(d){
+            if(d=="Good Rating"){
+              return 'blue'}
+              else{return 'red'};
+        });
 
             // draw legend text
-                legend4.append("text")
-                    .attr("x", width - 24)
-                    .attr("y", 9)
-                    .attr("dy", ".35em")
-                    .style("text-anchor", "end")
-                  .text(function(d) { return d;})
+        legend4.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+          .text(function(d) { return d;})
 
 
-      chart5.append("text")
-         .attr("x",(width/2))
-         .attr("y",10)
-         .attr("text-anchor","middle")
-         .text("Log of Votes vs. Rating");
+        chart5.append("text")
+           .attr("x",(width/2))
+           .attr("y",10)
+           .attr("text-anchor","middle")
+           .text("Log of Votes vs. Rating");
 
-      chart5.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
-          .call(xAxis);
+        chart5.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
         chart5.append("text")
           .attr("class", "label")
           .attr("x", width)
@@ -1116,15 +1117,16 @@
 
       // y-axis
       chart5.append("g")
-          .attr("class", "y axis")
-          .call(yAxis5);
-        chart5.append("text")
-          .attr("class", "label")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
-          .text("Votes");
+            .attr("class", "y axis")
+            .call(yAxis5);
+
+      chart5.append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Votes");
 
         // draw dots
         chart5.selectAll(".dot")
@@ -1159,32 +1161,29 @@
             });
 
             // draw legend
-            var legend5 = chart5.selectAll(".legend")
-                .data(['Good Rating','Bad Rating'])
-              .enter().append("g")
-                .attr("class", "legend")
-                .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+        var legend5 = chart5.selectAll(".legend")
+            .data(['Good Rating','Bad Rating'])
+          .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
 
-               legend5.append("rect")
-                    .attr("x", width - 18)
-                    .attr("width", 18)
-                    .attr("height", 18)
-                    .style("fill", function(d){
-                      if(d=="Good Rating"){
-                        return 'blue'}
-                        else{return 'red'};
-                    });
+        legend5.append("rect")
+          .attr("x", width - 18)
+          .attr("width", 18)
+          .attr("height", 18)
+          .style("fill", function(d){
+            if(d=="Good Rating"){
+              return 'blue'}
+              else{return 'red'};
+          });
 
-            // draw legend text
-                legend5.append("text")
-                    .attr("x", width - 24)
-                    .attr("y", 9)
-                    .attr("dy", ".35em")
-                    .style("text-anchor", "end")
-                  .text(function(d) { return d;})
-
-
-
+        // draw legend text
+        legend5.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+          .text(function(d) { return d;})
       });
     </script>
 
@@ -1222,7 +1221,6 @@
           .attr('class','select')
           .on('change',onchange)
 
-
       var options = select
         .selectAll('option')
         .data(years).enter()
@@ -1235,7 +1233,7 @@
         display2();
       };
 
-      var svg = d3.select("#area6").append("svg")
+      var svg6 = d3.select("#area6").append("svg")
         .attr("width", (width+margin.left+margin.right))
         .attr("height", (height+margin.top+margin.bottom))
         .append("g")
@@ -1253,15 +1251,14 @@
 
       var colorDomain; // generated dynamically
 
-
-      svg.append("text")
+      svg6.append("text")
           .attr("class", "mono")
          .attr("x",-5)
          .attr("y",10)
          .attr("text-anchor","end")
          .text("Borough");
 
-      svg.append("text")
+      svg6.append("text")
           .attr("x", width-100)
           .attr("y", height-margin.bottom)
           .attr("text-anchor","end")
@@ -1276,7 +1273,7 @@
          .text("Crimes in New York City");
 
 
-      var legend1 = svg.selectAll(".legend2").append("g")
+      var legend1 = svg6.selectAll(".legend2").append("g")
           .data(colors)
         .enter().append("g")
           .attr("class", "legend2");
@@ -1291,7 +1288,7 @@
           .style("fill", function(d){
             return d});
 
-      svg.append("g")
+      svg6.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0," + (height) + ")")
         .call(xAxis)
@@ -1303,10 +1300,10 @@
           .attr("y",0)
           .style("text-anchor", "start");
 
-      svg.append("g").attr("class", "axis").call(yAxis);
+      svg6.append("g").attr("class", "axis").call(yAxis);
 
 
-      svg.append("text")
+      svg6.append("text")
         .attr("x", width/4)
         .attr("y", height-20)
         .attr("dy", "0.35em")
@@ -1362,13 +1359,13 @@
           return parseInt(entry.count);});
         colorScale.domain(d3.range(colorDomain[0],colorDomain[1]));
 
-        var rects = svg.selectAll(".heatmap").data(processed);//cvg was canvas
+        var rects6 = svg6.selectAll(".heatmap").data(processed);//cvg was canvas
 
         //console.log(legend);
-        rects.enter().append("rect").attr("class","heatmap");
-        rects.exit().transition().duration(1000).remove();
+        rects6.enter().append("rect").attr("class","heatmap");
+        rects6.exit().transition().duration(1000).remove();
 
-        rects.transition().duration(1000)
+        rects6.transition().duration(1000)
           .attr("x", function(d) {
             return x(d.crime) + p / 2; })
           .attr("y", function(d) { return y(d.borough) + p / 2; })
@@ -1382,7 +1379,7 @@
         var list2 = Object.values(colorScale.quantiles());
         list2.unshift(0);
 
-        var legend = svg.selectAll(".legend").data(list2);
+        var legend = svg6.selectAll(".legend").data(list2);
 
         legend.exit().remove();
 
