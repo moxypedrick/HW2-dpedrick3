@@ -1420,7 +1420,7 @@
       }
 
       //make svg element and set width, height, and margins
-      var svg = d3.select("svg"),
+      var svg7 = d3.select("svg"),
         margin = {top: 20, right: 30, bottom: 30, left: 100},
         axisMargin = 20,
         valueMargin = 4,
@@ -1431,7 +1431,7 @@
       //make the x and y scales
       var x = d3.scaleLinear().range([0, width]);
       var y = d3.scaleBand().range([height, 0]);
-      var g = svg.append("g")
+      var g = svg7.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       //iterate over all elements and get their population at the end of the time period
@@ -1472,7 +1472,7 @@
             });
 
       var labelWidth = {};
-      svg.selectAll(".text")
+      svg7.selectAll(".text")
         .data(countryPopList)
         .enter()
         .append("text")
@@ -1487,7 +1487,7 @@
           this.remove();
         });
 
-      svg.selectAll(".text")
+      svg7.selectAll(".text")
         .data(countryPopList)
         .enter()
         .append("text")
@@ -1501,7 +1501,7 @@
 
       var textWidth = {};
 
-      svg.selectAll(".text")
+      svg7.selectAll(".text")
         .data(countryPopList)
         .enter()
         .append("text")
@@ -1516,7 +1516,7 @@
             this.remove();
           });
 
-      svg.selectAll(".text")
+      svg7.selectAll(".text")
         .data(countryPopList)
         .enter()
         .append("text")
@@ -1581,7 +1581,7 @@
         // append the svg obgect to the body of the page
         // appends a 'group' element to 'svg'
         // moves the 'group' element to the top left margin
-        var svg = d3.select("#area7-1")
+        var svg7 = d3.select("#area7-1")
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
@@ -1590,12 +1590,12 @@
                 "translate(" + margin.left + "," + margin.top + ")");
 
         // Add the valueline path.
-        svg.append("path")
+        svg7.append("path")
           .datum(growthRateList)
           .attr("class", "line")
           .attr("d", valueline);
 
-        svg.selectAll(".dot")
+        svg7.selectAll(".dot")
           .data(growthRateList)
           .enter().append("circle") // Uses the enter().append() method
             .attr("class", "dot") // Assign a class for styling
@@ -1608,15 +1608,15 @@
           .ticks(d3.timeYear)
           .tickFormat(d3.timeFormat("%Y"));
 
-        svg.append("g")
+        svg7.append("g")
           .call(xAxis)
           .attr("transform", "translate(0," + height + ")");
 
         // Add the Y Axis
-        svg.append("g")
+        svg7.append("g")
           .call(d3.axisLeft(y));
 
-        svg.append("text")
+        svg7.append("text")
           .attr("class", "labelSmall")
           .attr("x", width+15)
           .attr("y", height-10)
@@ -1624,7 +1624,7 @@
           .text("Year");
 
         labelLenght=0
-        svg.append("text")
+        svg7.append("text")
           .attr("class", "labelSmall")
           .attr("x", width/2)
           .attr("y", -10)
@@ -1638,7 +1638,7 @@
             this.remove();
         });
 
-        svg.append("text")
+        svg7.append("text")
           .attr("class", "labelSmall")
           .attr("x", width/2 +labelLength/2)
           .attr("y", -15)
@@ -1647,7 +1647,7 @@
             return "% Pop. change in: "+country;
           });
 
-        svg.append("text")
+        svg7.append("text")
           .attr("class", "labelSmall")
           .attr("y", -10)
           .attr("dy", ".71em")
@@ -1667,18 +1667,18 @@
           .attr("class", "tooltip")
           .style("opacity", 0);
 
-      var svg = d3.select("#map"),
+      var svg8 = d3.select("#map"),
           width = +svg.attr("width"),
           height = +svg.attr("height");
 
-      svg.append("text")
+      svg8.append("text")
               .attr("x", (width / 2))
               .attr("y", 20)
               .attr("text-anchor", "middle")
               .style("font-size", "22px")
               .text("Choropleth Map of County Data");
 
-      svg.append("text")
+      svg8.append("text")
               .attr("x", width - 75)
               .attr("y", height-210)
               .attr("text-anchor", "middle")
@@ -1710,18 +1710,18 @@
         .domain(d3.range(2,10))
         .range(d3.schemeBlues[9]);
 
-      var g = svg.append("g")
+      var g8 = svg.append("g")
         .attr("class", "key")
         .attr("transform", "translate(0,40)");
 
-      g.append("text")
+      g8.append("text")
         .attr("class", "caption")
         .attr("x", x.range()[0])
         .attr("y", -6)
         .attr("fill", "#000")
         .attr("text-anchor", "start");
 
-      var legend1 = svg.selectAll(".legend")
+      var legend1 = svg8.selectAll(".legend")
         .data(color.domain())
         .enter().append("g")
           .attr("class", "legend")
@@ -1764,10 +1764,10 @@
           +  d3.format(',')(county_detail.get(d.id)[1]);
       });
 
-      svg.call(tip);
+      svg8.call(tip);
 
       function ready([us]) {
-        svg.append("g")
+        svg8.append("g")
           .attr("class", "counties")
           .selectAll("path")
           .data(topojson.feature(us, us.objects.counties).features)
@@ -1778,12 +1778,12 @@
           .on("mouseover",tip.show)
           .on("mouseout", tip.hide)
 
-        svg.append("path")
+        svg8.append("path")
           .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b; }))
           .attr("class", "counties")
           .attr("d", path);
 
-        svg.append("path")
+        svg8.append("path")
           .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
           .attr("class", "states")
           .attr("d", path);
