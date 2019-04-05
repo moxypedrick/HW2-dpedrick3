@@ -1142,9 +1142,9 @@
             boroughs = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island'],
             crime = ['Assault', 'Burglary', 'Housing', 'Murder', 'Robbery', 'Shooting'],
             years = [2011,2012,2013,2014,2015],
-            xDomain = crime,
+            xDomainCrime = crime,
             yDomain = boroughs,
-            x = d3.scaleBand().domain(crime).range([0,width-margin.left-margin.right]),
+            xCrime = d3.scaleBand().domain(crime).range([0,width-margin.left-margin.right]),
             y = d3.scaleBand().domain(boroughs).range([0,height-margin.top-margin.bottom]),
             year = 2011,
             p = 2,
@@ -1186,9 +1186,9 @@
             .append("g")
             .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
 
-          var xAxis = d3.axisBottom()
+          var xAxisCrime = d3.axisBottom()
             .tickSize(0)
-            .scale(x);
+            .scale(xCrime);
 
           var yAxis = d3.axisLeft()
             .tickSize(0)
@@ -1228,9 +1228,9 @@
 
           legend1.append("rect")
               .attr("x", function(d, i) {
-                return x.bandwidth()/2*i + 30})
+                return xCrime.bandwidth()/2*i + 30})
               .attr("y", height-(10))
-              .attr("width", x.bandwidth()/2)
+              .attr("width", xCrime.bandwidth()/2)
               .attr("height", y.bandwidth() / 6)
               .style("fill", function(d){
                 return d});
@@ -1238,7 +1238,7 @@
           svg6.append("g")
             .attr("class", "axis")
             .attr("transform", "translate(0," + (height) + ")")
-            .call(xAxis)
+            .call(xAxisCrime)
             .selectAll("text")
               .attr("transform", "rotate(270)")
               .attr("x", function(d,i){
@@ -1314,9 +1314,9 @@
 
             rects6.transition().duration(1000)
               .attr("x", function(d) {
-                return x(d.crime) + p / 2; })
+                return xCrime(d.crime) + p / 2; })
               .attr("y", function(d) { return y(d.borough) + p / 2; })
-              .attr("width", x.bandwidth() - p)
+              .attr("width", xCrime.bandwidth() - p)
               .attr("height", y.bandwidth() - p)
               .attr("class", "heatmap bordered")
               .style("fill", function(d) {
@@ -1333,7 +1333,7 @@
             legend.enter().append("text")
               .attr("class", "legend")
               .attr("x", function(d, i) {
-                return x.bandwidth()/2*i + 20})
+                return xCrime.bandwidth()/2*i + 20})
               .attr("y", height+5)
               .attr("dy", ".35em")
               .attr("dx", "1em")
@@ -1587,7 +1587,7 @@
 
         svg72.append("text")
           .attr("class", "labelSmall")
-          .attr("x", width72/2 +labelLength/2)
+          .attr("x", width72/2 +labelLength72/2)
           .attr("y", -15)
           .style("text-anchor", "end")
           .text(function(d){
