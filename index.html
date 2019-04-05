@@ -266,9 +266,9 @@
           .attr("x", 0)
           .attr("height", y7.bandwidth()*.9)
           .attr("y", function(d) {
-            return y(d.name); })
+            return y7(d.name); })
           .attr("width", function(d) {
-            return x(d.value); })
+            return x7(d.value); })
             .on("mouseover", function(d){
               display(d.name);
             })
