@@ -1266,7 +1266,7 @@
       var map = d3.map();
 
 
-      const data = d3.csv("Q4/heatmap.csv", function(d){
+      const data6 = d3.csv("Q4/heatmap.csv", function(d){
         if(parseInt(d.Year)==2011){
           map11.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
         else if(parseInt(d.Year)==2012){
@@ -1279,7 +1279,7 @@
           map15.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
       });
 
-      data.then(function(){
+      data6.then(function(){
         display2();
         return display2();
       })
@@ -1365,7 +1365,7 @@
       }
 
       //make svg element and set width, height, and margins
-      var svg7 = d3.select("svg"),
+      var svg7 = d3.select("#area7-1"),
         margin = {top: 20, right: 30, bottom: 30, left: 100},
         axisMargin = 20,
         valueMargin = 4,
