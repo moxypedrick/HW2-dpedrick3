@@ -1173,7 +1173,7 @@
           .text(function (d) { return d; });
 
       function onchange() {
-        selectValue = d3.select('select').property('value')
+        selectValue = d3.select('select3').property('value')
         year = (selectValue);
         display2();
       };
@@ -1483,7 +1483,7 @@
         countryIndex = 0;
 
         for(var p=0; p< data7.length;p++){
-          if(country == data[p]['country']){
+          if(country == data7[p]['country']){
             countryIndex=p;
           }
         }
