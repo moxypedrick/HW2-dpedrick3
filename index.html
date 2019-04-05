@@ -619,6 +619,734 @@
     </script>
 
 
+    <script>
+      document.getElementById("area1").style.pageBreakAfter = "always";
+      document.getElementById("area2").style.pageBreakAfter = "always";
+      document.getElementById("area3").style.pageBreakAfter = "always";
+      document.getElementById("area4").style.pageBreakAfter = "always";
+      document.getElementById("area5").style.pageBreakAfter = "always";
+      var margin = {top: 50, right: 20, bottom: 30, left: 80},
+          width = 960 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
+
+      // setup x
+      var xValue = function(d) { return parseFloat(d.Rating);}, // data -> value
+          xScale = d3.scaleLinear().range([0, width]), // value -> display
+          xMap = function(d) { return xScale(xValue(d));}, // data -> display
+          xAxis = d3.axisBottom().scale(xScale);
+
+      // setup y
+      var yValue = function(d) { return parseInt(d.WinsNoms)}, // data -> value
+          yScale = d3.scaleLinear().range([height, 0]).nice(), // value -> display
+          yMap = function(d) {return yScale(yValue(d));}, // data -> display
+          yAxis = d3.axisLeft().scale(yScale);
+      // setup second y variable
+
+      var yValue2 = function(d) { return parseInt(d.Budget)}, // data -> value
+          yScale2 = d3.scaleLinear().range([height, 0]), // value -> display
+          yMap2 = function(d) {
+            return yScale2(yValue2(d));}, // data -> display
+          yAxis2 = d3.axisLeft().scale(yScale2);
+
+      var yValue3 = function(d) { return parseInt(d.Votes)}, // data -> value
+          yScale3 = d3.scaleLinear().range([height, 0]), // value -> display
+          yMap3 = function(d) { return yScale3(yValue3(d));}, // data -> display
+          yAxis3 = d3.axisLeft().scale(yScale3);
+
+      var yValue4 = function(d) { return parseInt(d.Votes)}, // data -> value
+          yScale4 = d3.scaleSqrt().range([height, 0]), // value -> display
+          yMap4 = function(d) { return yScale4(yValue4(d));}, // data -> display
+          yAxis4 = d3.axisLeft().scale(yScale4);
+
+      var yValue5 = function(d) { return parseInt(d.Votes)}, // data -> value
+          yScale5 = d3.scaleLog().clamp(true).range([height, 0]).nice(), // value -> display
+          yMap5 = function(d) { return yScale5(yValue5(d));}, // data -> display
+          yAxis5 = d3.axisLeft().scale(yScale5);
+      //var shapeScale = d3.scaleOrdinal
+
+      var min = 200;
+      var max = null;
+      var symbols = d3.scaleOrdinal(d3.symbols);
+      var symbol = d3.symbol().size(100);
+      //get min and max. Take difference and place the current
+      var sizeValue = function(d) { return d.Votes};
+
+      // add the graph canvas to the body of the webpage
+      var chart1 = d3.select("#area1").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var chart2 = d3.select("#area2").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var chart3 = d3.select("#area3").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var chart4 = d3.select("#area4").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var chart5 = d3.select("#area5").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      // add the tooltip area to the webpage
+      var tooltip = d3.select("#graph-body").append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 0);
+
+      //console.log(min, max);
+      data = d3.csv("Q3/movies.csv").then(function(data){
+        data.Rating = +data.Rating;
+        data.WinsNoms = +data.WinsNoms;
+        data.IsGoodRating = +data.IsGoodRating;
+        data.Budget = +data.Budget;
+        data.Votes = +data.Votes;
+
+        data.forEach(function(d){
+          if(parseInt(d.WinsNoms) < min){
+            min = d.WinsNoms;
+          } else if(parseInt(d.WinsNoms) >= max){
+            max = d.WinsNoms;
+          }
+        })
+
+        xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+        yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+        yScale2.domain([d3.min(data, yValue2)-1, d3.max(data, yValue2)+1]);
+        yScale3.domain([d3.min(data, yValue3)-1, d3.max(data, yValue3)+1]);
+        yScale4.domain([d3.min(data, yValue4)-1, d3.max(data, yValue4)+1]);
+        yScale5.domain([d3.min(data, yValue5)-1, d3.max(data, yValue5)+1]);
+
+
+        chart1.append("text")
+           .attr("x",(width/2))
+           .attr("y",10)
+           .attr("text-anchor","middle")
+           .text("Wins+Nominations vs. Rating");
+
+          // x-axis
+        chart1.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+        chart1.append("text")
+            .attr("class", "label")
+            .attr("x", width)
+            .attr("y", height-10)
+            .style("text-anchor", "end")
+            .text("Rating");
+
+          // y-axis
+        chart1.append("g")
+            .attr("class", "y axis")
+            .call(yAxis);
+        chart1.append("text")
+          .attr("class", "label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Wins+Nominations");
+
+          // draw dots
+        chart1.selectAll(".dot")
+            .data(data)
+          .enter().append("circle")
+            .attr("class", "dot")
+            //.attr("d", d3.symbol().type(d3.symbolCross))
+            .attr("r", 3.5)
+            .attr("cx", xMap)
+            .attr("cy", yMap)
+            .style("stroke", function(d) {
+              if(d.IsGoodRating == 1){
+                return('blue');
+              } else{ return 'red'};})
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                     .duration(200)
+                     .style("opacity", .9);
+                tooltip.html(d.Title + "<br/> (" + xValue(d)
+                + ", " + yValue(d) + ")")
+                     .style("left", (d3.event.pageX + 5) + "px")
+                     .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                     .duration(500)
+                     .style("opacity", 0);
+            });
+
+
+              // draw legend
+        var legend1 = chart1.selectAll(".legend")
+            .data(['Good Rating','Bad Rating'])
+          .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+        legend1.append("rect")
+          .attr("x", width - 18)
+          .attr("width", 18)
+          .attr("height", 18)
+          .style("fill", function(d){
+            if(d=="Good Rating"){
+              return 'blue'}
+              else{return 'red'};
+          });
+
+              // draw legend text
+        legend1.append("text")
+          .attr("x", width - 24)
+          .attr("y", 9)
+          .attr("dy", ".35em")
+          .style("text-anchor", "end")
+          .text(function(d) { return d;})
+
+
+        chart2.append("text")
+           .attr("x",(width/2))
+           .attr("y",10)
+           .attr("text-anchor","middle")
+           .text("Budget vs. Rating");
+        chart2.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+        chart2.append("text")
+            .attr("class", "label")
+            .attr("x", width)
+            .attr("y", height-10)
+            .style("text-anchor", "end")
+            .text("Rating");
+
+              // y-axis
+        chart2.append("g")
+            .attr("class", "y axis")
+            .call(yAxis2);
+        chart2.append("text")
+          .attr("class", "label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Budget");
+
+
+
+
+
+
+              // draw dots
+        chart2.selectAll(".dot")
+            .data(data)
+          .enter().append("circle")
+            .attr("class", "dot")
+            .attr("r", 3.5)
+            .attr("cx", xMap)
+            .attr("cy", yMap2)
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
+            .style("stroke", function(d) {
+              if(d.IsGoodRating == 1){
+                return('blue');
+              } else{ return 'red'};})
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                     .duration(200)
+                     .style("opacity", .9);
+                tooltip.html(d.Title + "<br/> (" + xValue(d)
+                + ", " + yValue(d) + ")")
+                     .style("left", (d3.event.pageX + 5) + "px")
+                     .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                     .duration(500)
+                     .style("opacity", 0);
+        });
+        var legend2 = chart2.selectAll(".legend")
+            .data(['Good Rating','Bad Rating'])
+          .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+        legend2.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", function(d){
+              if(d=="Good Rating"){
+                return 'blue'}
+                else{return 'red'};
+        });
+        legend2.append("text")
+          .attr("x", width - 24)
+          .attr("y", 9)
+          .attr("dy", ".35em")
+          .style("text-anchor", "end")
+          .text(function(d) { return d;})
+
+        chart3.append("text")
+           .attr("x",(width/2))
+           .attr("y",10)
+           .attr("text-anchor","middle")
+           .text("Votes vs. Rating");
+        chart3.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+        chart3.append("text")
+          .attr("class", "label")
+          .attr("x", width)
+          .attr("y", height-10)
+          .style("text-anchor", "end")
+          .text("Rating");
+
+                  // y-axis
+        chart3.append("g")
+          .attr("class", "y axis")
+          .call(yAxis3);
+        chart3.append("text")
+          .attr("class", "label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Votes");
+        chart3.selectAll(".dot")
+          .data(data)
+          .enter().append("circle")
+            .attr("class", "dot")
+            .attr("r", function(d){
+              //console.log(d.WinsNoms);
+              return ((d.WinsNoms/(max-min))*10+3.5)
+            })
+            //var min = Math.min.apply(Math, d.WinsNoms);
+            //var max = Math.min.apply(Math, d.WinsNoms);
+            .attr("cx", xMap)
+            .attr("cy", yMap3)
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
+            .style("stroke", function(d) {
+              if(d.IsGoodRating == 1){
+                return('blue');
+              } else{ return 'red'};})
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                     .duration(200)
+                     .style("opacity", .9);
+                tooltip.html(d.Title + "<br/> (" + xValue(d)
+                + ", " + yValue(d) + ")")
+                     .style("left", (d3.event.pageX + 5) + "px")
+                     .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                     .duration(500)
+                     .style("opacity", 0);
+        });
+        var legend3 = chart3.selectAll(".legend")
+              .data(['Good Rating','Bad Rating'])
+            .enter().append("g")
+              .attr("class", "legend")
+              .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+        legend3.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", function(d){
+              if(d=="Good Rating"){
+                return 'blue'}
+                else{return 'red'};
+            });
+
+                        // draw legend text
+        legend3.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d) { return d;})
+
+        chart4.append("text")
+             .attr("x",(width/2))
+             .attr("y",10)
+             .attr("text-anchor","middle")
+             .text("Sqrt of Votes vs. Rating");
+        chart4.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+        chart4.append("text")
+    .attr("class", "label")
+    .attr("x", width)
+    .attr("y", height-10)
+    .style("text-anchor", "end")
+    .text("Rating");
+        chart4.append("g")
+      .attr("class", "y axis")
+      .call(yAxis4);
+        chart4.append("text")
+          .attr("class", "label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Votes");
+        chart4.selectAll(".dot")
+            .data(data)
+          .enter().append("circle")
+            .attr("class", "dot")
+            .attr("r", function(d){
+              return ((d.WinsNoms/(max-min))*10+3.5)
+            })
+            //var min = Math.min.apply(Math, d.WinsNoms);
+            //var max = Math.min.apply(Math, d.WinsNoms);
+            .attr("cx", xMap)
+            .attr("cy", yMap4)
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
+            .style("stroke", function(d) {
+              if(d.IsGoodRating == 1){
+                return('blue');
+              } else{ return 'red'};})
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                     .duration(200)
+                     .style("opacity", .9);
+                tooltip.html(d.Title + "<br/> (" + xValue(d)
+                + ", " + yValue(d) + ")")
+                     .style("left", (d3.event.pageX + 5) + "px")
+                     .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                     .duration(500)
+                     .style("opacity", 0);
+            });
+        var legend4 = chart4.selectAll(".legend")
+            .data(['Good Rating','Bad Rating'])
+          .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+        legend4.append("rect")
+          .attr("x", width - 18)
+          .attr("width", 18)
+          .attr("height", 18)
+          .style("fill", function(d){
+            if(d=="Good Rating"){
+              return 'blue'}
+              else{return 'red'};
+        });
+        legend4.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+          .text(function(d) { return d;})
+
+        chart5.append("text")
+           .attr("x",(width/2))
+           .attr("y",10)
+           .attr("text-anchor","middle")
+           .text("Log of Votes vs. Rating");
+        chart5.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+        chart5.append("text")
+            .attr("class", "label")
+            .attr("x", width)
+            .attr("y", height-10)
+            .style("text-anchor", "end")
+            .text("Rating");
+        chart5.append("g")
+              .attr("class", "y axis")
+              .call(yAxis5);
+        chart5.append("text")
+          .attr("class", "label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Votes");
+        chart5.selectAll(".dot")
+            .data(data)
+          .enter().append("circle")
+            .attr("class", "dot")
+            .attr("r", function(d){
+              return ((d.WinsNoms/(max-min))*10+3.5)
+            })
+            //var min = Math.min.apply(Math, d.WinsNoms);
+            //var max = Math.min.apply(Math, d.WinsNoms);
+            .attr("cx", xMap)
+            .attr("cy", yMap5)
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
+            .style("stroke", function(d) {
+              if(d.IsGoodRating == 1){
+                return('blue');
+              } else{ return 'red'};})
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                     .duration(200)
+                     .style("opacity", .9);
+                tooltip.html(d.Title + "<br/> (" + xValue(d)
+                + ", " + yValue(d) + ")")
+                     .style("left", (d3.event.pageX + 5) + "px")
+                     .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                     .duration(500)
+                     .style("opacity", 0);
+            });
+
+            // draw legend
+        var legend5 = chart5.selectAll(".legend")
+            .data(['Good Rating','Bad Rating'])
+          .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i*18 + ")"; });
+        legend5.append("rect")
+          .attr("x", width - 18)
+          .attr("width", 18)
+          .attr("height", 18)
+          .style("fill", function(d){
+            if(d=="Good Rating"){
+              return 'blue'}
+              else{return 'red'};
+          });
+        legend5.append("text")
+              .attr("x", width - 24)
+              .attr("y", 9)
+              .attr("dy", ".35em")
+              .style("text-anchor", "end")
+            .text(function(d) { return d;})
+      });
+    </script>
+
+
+        <script>
+          var margin = {top: 30, right: 70, bottom:70, left: 70},
+            width = 600 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom,
+            colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+            boroughs = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island'],
+            crime = ['Assault', 'Burglary', 'Housing', 'Murder', 'Robbery', 'Shooting'],
+            years = [2011,2012,2013,2014,2015],
+            xDomain = crime,
+            yDomain = boroughs,
+            x = d3.scaleBand().domain(crime).range([0,width-margin.left-margin.right]),
+            y = d3.scaleBand().domain(boroughs).range([0,height-margin.top-margin.bottom]),
+            year = 2011,
+            p = 2,
+            arr = [],
+            arrLength = 0;
+
+
+          var title1 = d3.select("#title1")
+            .attr("width", (width+margin.left+margin.right))
+            .attr("height", (margin.top*4))
+            .append("g")
+            ;
+          var select3 = d3.select("#dropdown")
+            .attr("width", (width+margin.left+margin.right))
+            .attr("height", (margin.top*4))
+            .append("g")
+            .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
+
+          var select = select3
+            .append('select')
+              .attr('class','select')
+              .on('change',onchange)
+
+          var options = select
+            .selectAll('option')
+            .data(years).enter()
+            .append('option')
+              .text(function (d) { return d; });
+
+          function onchange() {
+            selectValue = d3.select('select3').property('value')
+            year = (selectValue);
+            display2();
+          };
+
+          var svg6 = d3.select("#area6").append("svg")
+            .attr("width", (width+margin.left+margin.right))
+            .attr("height", (height+margin.top+margin.bottom))
+            .append("g")
+            .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
+
+          var xAxis = d3.axisBottom()
+            .tickSize(0)
+            .scale(x);
+
+          var yAxis = d3.axisLeft()
+            .tickSize(0)
+            .scale(y);
+
+          var colorScale = d3.scaleQuantile().range(colors);
+
+          var colorDomain; // generated dynamically
+
+          svg6.append("text")
+              .attr("class", "mono")
+             .attr("x",-5)
+             .attr("y",10)
+             .attr("text-anchor","end")
+             .text("Borough");
+
+          svg6.append("text")
+              .attr("x", width-100)
+              .attr("y", height-margin.bottom)
+              .attr("text-anchor","end")
+              .attr("class", "mono")
+              .text("Crime");
+
+          title1.append("text")
+             .attr("x",200)
+             .attr("y",200)
+             .attr("text-anchor","start")
+             .attr("class", "title")
+             .text("Crimes in New York City");
+
+
+          var legend1 = svg6.selectAll(".legend2").append("g")
+              .data(colors)
+            .enter().append("g")
+              .attr("class", "legend2");
+
+
+          legend1.append("rect")
+              .attr("x", function(d, i) {
+                return x.bandwidth()/2*i + 30})
+              .attr("y", height-(10))
+              .attr("width", x.bandwidth()/2)
+              .attr("height", y.bandwidth() / 6)
+              .style("fill", function(d){
+                return d});
+
+          svg6.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(0," + (height) + ")")
+            .call(xAxis)
+            .selectAll("text")
+              .attr("transform", "rotate(270)")
+              .attr("x", function(d,i){
+                return margin.bottom-30;
+              })
+              .attr("y",0)
+              .style("text-anchor", "start");
+
+          svg6.append("g").attr("class", "axis").call(yAxis);
+
+
+          svg6.append("text")
+            .attr("x", width/4)
+            .attr("y", height-20)
+            .attr("dy", "0.35em")
+            .attr("class", "mono")
+            .text(function(d){
+              return "No. of Crimes";
+            });
+
+
+          var map11 = d3.map();
+          var map12 = d3.map();
+          var map13 = d3.map();
+          var map14 = d3.map();
+          var map15 = d3.map();
+          var map = d3.map();
+
+
+          const data6 = d3.csv("Q4/heatmap.csv", function(d){
+            if(parseInt(d.Year)==2011){
+              map11.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+            else if(parseInt(d.Year)==2012){
+              map12.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+            else if(parseInt(d.Year)==2013){
+              map13.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+            else if(parseInt(d.Year)==2014){
+              map14.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+            else if(parseInt(d.Year)==2015){
+              map15.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+          });
+
+          data6.then(function(){
+            display2();
+            return display2();
+          })
+
+          function display2(){
+            var processed = [];
+            picker = year;
+            for (index=0; index < crime.length; index++){
+              for(borough=0; borough<boroughs.length;borough++){
+                var count = 0
+
+                if(picker==2011){count = map11.get(crime[index])[borough]}
+                else if(picker==2012){count = map12.get(crime[index])[borough]}
+                else if(picker==2013){count = map13.get(crime[index])[borough]}
+                else if(picker==2014){count = map14.get(crime[index])[borough]}
+                else if(picker==2015){count = map15.get(crime[index])[borough]}
+                processed.push({'borough':boroughs[borough],'crime':crime[index],'count':count});
+              }
+            };
+
+            colorDomain = d3.extent(processed, function(entry){
+              return parseInt(entry.count);});
+            colorScale.domain(d3.range(colorDomain[0],colorDomain[1]));
+
+            var rects6 = svg6.selectAll(".heatmap").data(processed);//cvg was canvas
+
+            //console.log(legend);
+            rects6.enter().append("rect").attr("class","heatmap");
+            rects6.exit().transition().duration(1000).remove();
+
+            rects6.transition().duration(1000)
+              .attr("x", function(d) {
+                return x(d.crime) + p / 2; })
+              .attr("y", function(d) { return y(d.borough) + p / 2; })
+              .attr("width", x.bandwidth() - p)
+              .attr("height", y.bandwidth() - p)
+              .attr("class", "heatmap bordered")
+              .style("fill", function(d) {
+                //console.log(d.count, colorScale(d.count));
+                return colorScale(d.count); });
+
+            var list2 = Object.values(colorScale.quantiles());
+            list2.unshift(0);
+
+            var legend = svg6.selectAll(".legend").data(list2);
+
+            legend.exit().remove();
+
+            legend.enter().append("text")
+              .attr("class", "legend")
+              .attr("x", function(d, i) {
+                return x.bandwidth()/2*i + 20})
+              .attr("y", height+5)
+              .attr("dy", ".35em")
+              .attr("dx", "1em")
+              .style("text-anchor", "start")
+              .merge(legend)
+                .text(function(d){
+                return parseInt(d);
+              });
+            }
+
+    </script>
+
+
     <script type="text/javascript">
       var data7 = [{country: 'Bangladesh', population_2012: 105905297, growth: {year_2013:42488 , year_2014:934 , year_2015:52633 , year_2016:112822 , year_2017:160792}},
         {country: 'Ethopia', population_2012: 75656319, growth: {year_2013:1606010 , year_2014:1606705 , year_2015:1600666 , year_2016:1590077 , year_2017:1580805}},
