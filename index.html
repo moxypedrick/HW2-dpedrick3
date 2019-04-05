@@ -1383,7 +1383,7 @@
       for (var i = 0; i < data7.length; i++){
         var pop = countryPopList[i]['value'];
         for(var p = 0; p < yearList.length; p++){
-          pop = pop + data[i]['growth'][yearList[p]];
+          pop = pop + data7[i]['growth'][yearList[p]];
         }
         countryPopList[i]['value'] = pop;
       }
