@@ -1175,7 +1175,7 @@
               .text(function (d) { return d; });
 
           function onchange() {
-            selectValue = d3.select('select3').property('value')
+            selectValue = d3.select('select').property('value')
             year = (selectValue);
             display2();
           };
@@ -1570,7 +1570,7 @@
           .style("text-anchor", "end")
           .text("Year");
 
-        labelLenght=0
+        labelLength72=0
         svg72.append("text")
           .attr("class", "labelSmall")
           .attr("x", width72/2)
@@ -1580,14 +1580,14 @@
             return "% Pop. change in: "+country;
           }).each(function(d,i){
 
-            labelLength = this.getComputedTextLength();
-            console.log(labelLength);
+            labelLength72 = this.getComputedTextLength();
+            console.log(labelLength72);
             this.remove();
         });
 
         svg72.append("text")
           .attr("class", "labelSmall")
-          .attr("x", width72/2 +labelLength72/2)
+          .attr("x", width72/2 +labelLength/2)
           .attr("y", -15)
           .style("text-anchor", "end")
           .text(function(d){
