@@ -1,209 +1,300 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <script src="lib/d3.v5.min.js"></script>
-    <script src="lib/d3-scale-chromatic.v1.min.js"></script>
-    <script src="lib/topojson.v2.min.js"></script>
-    <script src="lib/d3-tip.min.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>HW2</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300" rel="stylesheet">
-    <style>
+  <html lang="en">
+  <title>W3.CSS Template</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="lib/d3.v5.min.js"></script>
+  <script src="lib/d3-scale-chromatic.v1.min.js"></script>
+  <script src="lib/topojson.v2.min.js"></script>
+  <script src="lib/d3-tip.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+    .w3-sidebar {
+      z-index: 3;
+      width: 250px;
+      top: 43px;
+      bottom: 0;
+      height: inherit;
+    }
+    .circle {
+      fill: #FFEE93;
+      stroke: #FFC09F;
+    //  stroke: black;
+      stroke-width: 1.5px;
+    }
 
-      .counties {
+    .fixed {
+      fill: #FFC09F;
+      stroke: #fff;
+      stroke: black;
+      stroke-width: 1.5px;
+    }
+
+    .bar {
+      fill:#757575 ;
+    }
+    .bar:hover {
+      fill: #65AFFF;
+      cursor: pointer;
+    }
+    .mainChart{
+      float:left;
+    }
+    .detailsChart{
+      float: left;
+    }
+
+    .counties {
+      fill: none;
+      stroke: #fff;
+      stroke-linejoin: round;
+      stroke-width: .1;
+    }
+
+    .states {
+      fill: none;
+      stroke: #fff;
+      stroke-linejoin: round;
+      stroke-width: 1.5;
+    }
+
+    .d3-tip {
+      line-height: 1;
+      padding: 6px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .d3-tip:after {
+      box-sizing: border-box;
+      display: inline;
+      font-size: 10px;
+      width: 100%;
+      line-height: 1;
+      color: rgba(0, 0, 0, 0.8);
+      content: "\25BC";
+      position: absolute;
+      text-align: center;
+    }
+
+    .d3-tip.n:after {
+      margin: -2px 0 0 0;
+      top: 100%;
+      left: 0;
+    }
+
+    .labelSmall {
+      font-size: 10px;
+      color: #E6E6E6;
+      font-family: courier, Verdana, sans-serif;
+    }
+
+    .labelBig {
+      font-size: 12px;
+      color: #E6E6E6;
+      font-family: courier, Verdana, sans-serif;
+    }
+
+
+    .line {
         fill: none;
-        stroke: #fff;
-        stroke-linejoin: round;
-        stroke-width: .1;
-      }
+        stroke: #ffab00;
+        stroke-width: 3;
+    }
 
-      .states {
-        fill: none;
-        stroke: #fff;
-        stroke-linejoin: round;
-        stroke-width: 1.5;
-      }
+    path.link {
+      fill: none;
+    }
 
-      .d3-tip {
-        line-height: 1;
-        padding: 6px;
-        background: rgba(0, 0, 0, 0.8);
-        color: #fff;
-        border-radius: 4px;
-        font-size: 12px;
-      }
+    .dot {
+      fill-opacity: 0;
+    }
 
-      .d3-tip:after {
-        box-sizing: border-box;
-        display: inline;
-        font-size: 10px;
-        width: 100%;
-        line-height: 1;
-        color: rgba(0, 0, 0, 0.8);
-        content: "\25BC";
-        position: absolute;
-        text-align: center;
-      }
-
-      .d3-tip.n:after {
-        margin: -2px 0 0 0;
-        top: 100%;
-        left: 0;
-      }
-      .bar {
-        fill:#757575 ;
-      }
-      .bar:hover {
-        fill: #65AFFF;
-        cursor: pointer;
-      }
-      .mainChart{
-        float:left;
-      }
-      .detailsChart{
-        float: left;
-      }
-
-      .labelSmall {
-        font-size: 10px;
-        color: #E6E6E6;
-        font-family: courier, Verdana, sans-serif;
-      }
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+    .point {
+      fill: steelblue;
+      stroke: #000;
+    }
+    .tooltip {
+      position: absolute;
+      width: 200px;
+      height: 28px;
+      pointer-events: none;
+    }
 
 
-      .labelBig {
-        font-size: 12px;
-        color: #E6E6E6;
-        font-family: courier, Verdana, sans-serif;
-      }
+    .legend {
+      font-family: Consolas, courier;
+    }
+    rect.bordered {
+      stroke: #E6E6E6;
+      stroke-width:2px;
+    }
 
+    text.mono {
+      font-size: 9pt;
+      font-family: Consolas, courier;
+      fill: #aaa;
+    }
 
-      .dot {
-          fill: #ffab00;
-          stroke: #fff;
-      }
+    .title {
+      font-family: Consolas, courier;
+      font-size:16pt;
+      fill: #000f;
+      text-align: center;
+    }
 
-      .line {
-          fill: none;
-          stroke: #ffab00;
-          stroke-width: 3;
-      }
+    .axis{
+      fill: #000;
+      stroke-width:0px;
+      font-family: Consolas, courier;
+      fill: #aaa;
+      font-size: 10pt;
+    }
+  </style>
 
-      path.link {
-        fill: none;
-
-      }
-
-      .circle {
-        fill: #FFEE93;
-        stroke: #FFC09F;
-      //  stroke: black;
-        stroke-width: 1.5px;
-      }
-
-      .fixed {
-        fill: #FFC09F;
-        stroke: #fff;
-        stroke: black;
-        stroke-width: 1.5px;
-      }
-      text {
-        fill: #000;
-        font: 10px sans-serif;
-        pointer-events: none;
-      }
-      body {
-        font: 11px sans-serif;
-      }
-      .axis path,
-      .axis line {
-        fill: none;
-        stroke: #000;
-        shape-rendering: crispEdges;
-      }
-      .dot {
-        fill-opacity: 0;
-      }
-      axis path, .axis line {
-        fill: none;
-        stroke: #000;
-        shape-rendering: crispEdges;
-      }
-      .point {
-        fill: steelblue;
-        stroke: #000;
-      }
-      .tooltip {
-        position: absolute;
-        width: 200px;
-        height: 28px;
-        pointer-events: none;
-      }
-
-      body {
-        font: 11px sans-serif;
-        text-align: center;
-      }
-
-      .legend {
-        font-family: Consolas, courier;
-      }
-      rect.bordered {
-        stroke: #E6E6E6;
-        stroke-width:2px;
-      }
-
-      text.mono {
-        font-size: 9pt;
-        font-family: Consolas, courier;
-        fill: #aaa;
-      }
-
-      .title {
-        font-family: Consolas, courier;
-        font-size:16pt;
-        fill: #000f;
-        text-align: center;
-      }
-
-      .axis{
-        fill: #000;
-        stroke-width:0px;
-        font-family: Consolas, courier;
-        fill: #aaa;
-        font-size: 10pt;
-      }
-
-
-
-
-      @media only screen and (max-width:680px) {
-        /* For mobile phones: */
-      }
-    </style>
-  </head>
-  <div id="areaz" style="position:static"></div>
-  <div id="#graph-body" style="position:static">
-    <div id="area1" style="position:static"></div>
-    <div id="area2" style="position:static"></div>
-    <div id="area3" style="position:static"></div>
-    <div id="area4" style="position:static"></div>
-    <div id="area5" style="position:static"></div>
-  </div>
-  <div id="area6" style="position:static">
-    <div id="title1"></div>
-    <div id="dropdown"></div>
-  </div>
-  <div id="area7" style="position:static">
-    <svg id="area7-1" class="mainChart" width="760" height="200"></svg>
-    <svg id="area7-2" class="detailsChart" width="200" height="200"></svg>
-  </div>
-  <div id="area8" style="position:static">
-    <svg id = "map" width="960" height="600"></svg>
-  </div>
   <body>
+
+    <!-- Navbar -->
+    <div class="w3-top">
+      <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+        <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+        <a href="#D3-JS" class="w3-bar-item w3-button w3-theme-l1">D3 Examples</a>
+      </div>
+    </div>
+
+        <!-- Sidebar -->
+    <nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+      <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+        <i class="fa fa-remove"></i>
+      </a>
+      <h4 class="w3-bar-item"><b>Menu</b></h4>
+      <a class="w3-bar-item w3-button w3-hover-black" href="#directed-graph">Force Directed Graph</a>
+      <a class="w3-bar-item w3-button w3-hover-black" href="#scatterplots">Scatterplots</a>
+      <a class="w3-bar-item w3-button w3-hover-black" href="#heatmap">Heatmap</a>
+      <a class="w3-bar-item w3-button w3-hover-black" href="#bar-chart">Bar Chart</a>
+      <a class="w3-bar-item w3-button w3-hover-black" href="#choropleth-map">Choropleth Map</a>
+    </nav>
+
+      <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+      <!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+    <div class="w3-main" style="margin-left:250px">
+
+      <div id = "D3-JS" class="w3-row w3-padding-64">
+        <div class="w3-row-padding w3-container">
+          <h1 class="w3-text-teal">D3 JS Portfolio</h1>
+          <p>These are examples of D3 JS visualizations which I've completed. I am using D3 v5 for all visualizations.</p>
+        </div>
+      </div>
+
+      <div id = "directed-graph" class="w3-row">
+        <div  class="w3-row-padding w3-container">
+          <h1 class="w3-text-teal">Super Bowl Games visualized with a force related graph</h1>
+          <p>This force related graph shows all Super Bowl Games. Each node can be dragged across the screen or pinned to screen. To pin, double click node.
+            The size of the node represents the number of Super Bowl appearances by team. Data set included a 1 or 0 value for each game, this was used
+            to style the link between teams.</p>
+        </div>
+        <div id="edgeGraph" class="w3-row-padding"></div>
+      </div>
+
+      <div id = "scatterplots" class="w3-row w3-padding-64">
+        <div class="w3-row-padding w3-container">
+          <h1 class="w3-text-teal">X-Y Charts</h1>
+          <p>consequat.</p>
+        </div>
+        <div id="graph-body" style="position:static">
+          <div id="area1" style="position:static"></div>
+          <div id="area2" style="position:static"></div>
+          <div id="area3" style="position:static"></div>
+          <div id="area4" style="position:static"></div>
+          <div id="area5" style="position:static"></div>
+        </div>
+      </div>
+
+      <div id = "heatmap" class="w3-row w3-padding-64">
+        <div class="w3-row-padding w3-container">
+          <h1 class="w3-text-teal">Crime Map</h1>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum
+            dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div id="area6">
+          <div id="title1"></div>
+          <div id="dropdown"></div>
+        </div>
+      </div>
+
+      <div id="bar-chart" class="w3-row w3-padding-64">
+        <div class="w3-row-padding w3-container">
+          <h1 class="w3-text-teal">Interactive Barchart</h1>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum
+            dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div id="area7" style="position:static">
+          <svg id="area7-1" class="mainChart" width="760" height="200"></svg>
+          <svg id="area7-2" class="detailsChart" width="200" height="200"></svg>
+        </div>
+      </div>
+
+      <div id = "choropleth-map" class="w3-row w3-padding-64">
+        <div class="w3-row-padding w3-container">
+          <h1 class="w3-text-teal">Poverty Map</h1>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum
+            dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div id="area8" style="position:static">
+          <svg id = "map" width="960" height="600"></svg>
+        </div>
+      </div>
+
+      <footer id="myFooter">
+        <div class="w3-container w3-theme-l2 w3-padding-32">
+          <h4></h4>
+        </div>
+
+        <div class="w3-container w3-theme-l1">
+          <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+        </div>
+      </footer>
+
+      <!-- END MAIN -->
+    </div>
+
+    <script>
+      // Get the Sidebar
+      var mySidebar = document.getElementById("mySidebar");
+
+      // Get the DIV with overlay effect
+      var overlayBg = document.getElementById("myOverlay");
+
+      // Toggle between showing and hiding the sidebar, and add overlay effect
+      function w3_open() {
+        if (mySidebar.style.display === 'block') {
+          mySidebar.style.display = 'none';
+          overlayBg.style.display = "none";
+        } else {
+          mySidebar.style.display = 'block';
+          overlayBg.style.display = "block";
+        }
+      }
+
+      // Close the sidebar with the close button
+      function w3_close() {
+        mySidebar.style.display = "none";
+        overlayBg.style.display = "none";
+      }
+    </script>
     <script>
       // get the data
       links =  [
@@ -453,39 +544,38 @@
       //console.log(links);
       // Compute the distinct nodes from the links.
       links.forEach(function(link) {
-          if(typeof degrees[link.source] == "undefined"){
-            degrees[link.source] = 1;
-          } else {
-            degrees[link.source] = degrees[link.source] + 1;
-          }
-          if(typeof degrees[link.target] == "undefined"){
-            degrees[link.target] = 1;
-          } else{
-            degrees[link.target] = degrees[link.target] + 1;
-          }
-          link.source = nodes[link.source] ||
-              (nodes[link.source] = {name: link.source});
-          link.target = nodes[link.target] ||
-              (nodes[link.target] = {name: link.target});
-
+        if(typeof degrees[link.source] == "undefined"){
+          degrees[link.source] = 1;
+        } else {
+          degrees[link.source] = degrees[link.source] + 1;
+        }
+        if(typeof degrees[link.target] == "undefined"){
+          degrees[link.target] = 1;
+        } else{
+          degrees[link.target] = degrees[link.target] + 1;
+        }
+        link.source = nodes[link.source] ||
+            (nodes[link.source] = {name: link.source});
+        link.target = nodes[link.target] ||
+            (nodes[link.target] = {name: link.target});
       });
 
-      var width = 1200,
-          height = 700;
+      var width = 1000,
+        height = 500;
 
       var force = d3.forceSimulation()
-          .nodes(d3.values(nodes))
-          .force("link", d3.forceLink(links).distance(60))
-          .force('center', d3.forceCenter(width / 2, height / 2))
-          .force("x", d3.forceX())
-          .force("y", d3.forceY())
-          .force("charge", d3.forceManyBody().strength(-250))
-          .alphaTarget(1)
-          .on("tick", tick);
+        .nodes(d3.values(nodes))
+        .force("link", d3.forceLink(links).distance(60))
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force("x", d3.forceX())
+        .force("y", d3.forceY())
+        .force("charge", d3.forceManyBody().strength(-250))
+        .alphaTarget(1)
+        .on("tick", tick);
 
-      var svg1 = d3.select("#areaz").append("svg")
-          .attr("width", width)
-          .attr("height", height);
+      var svg1 = d3.select("#edgeGraph").append("svg")
+        .attr("width", width)
+        .attr("height", height);
 
       // add the links and the arrows
 
@@ -499,7 +589,7 @@
 
       // define the nodes
       var node = svg1.selectAll(".node")
-          .data(force.nodes())
+        .data(force.nodes())
         .enter().append("g")
           .attr("class", "node")
           .call(d3.drag()
@@ -521,16 +611,16 @@
       var textWidth = {};
 
 
-      /// add the labels
+       /// add the labels
       node.append("text")
-          .attr("dx", "0px")
-          .attr("dy", "20px")
-          .text(function(d) {
-            return d.name })
-            .each(function(d,i){
-              textWidth[d.name] = this.getComputedTextLength();
-              this.remove();
-            });
+        .attr("dx", "0px")
+        .attr("dy", "20px")
+        .text(function(d) {
+          return d.name })
+          .each(function(d,i){
+            textWidth[d.name] = this.getComputedTextLength();
+            this.remove();
+          });
 
       node.append("text")
           .attr("dx", function(d){
@@ -540,7 +630,7 @@
           .text(function(d) {
             return d.name });
 
-      // add the curvy lines
+       // add the curvy lines
       function tick() {
         path.attr("d", function(d) {
           var dx = d.target.x - d.source.x,
@@ -617,8 +707,6 @@
         }
       };
     </script>
-
-
     <script>
       document.getElementById("area1").style.pageBreakAfter = "always";
       document.getElementById("area2").style.pageBreakAfter = "always";
@@ -662,16 +750,16 @@
           yScale5 = d3.scaleLog().clamp(true).range([height, 0]).nice(), // value -> display
           yMap5 = function(d) { return yScale5(yValue5(d));}, // data -> display
           yAxis5 = d3.axisLeft().scale(yScale5);
-      //var shapeScale = d3.scaleOrdinal
+       //var shapeScale = d3.scaleOrdinal
 
       var min = 200;
       var max = null;
       var symbols = d3.scaleOrdinal(d3.symbols);
       var symbol = d3.symbol().size(100);
-      //get min and max. Take difference and place the current
+       //get min and max. Take difference and place the current
       var sizeValue = function(d) { return d.Votes};
 
-      // add the graph canvas to the body of the webpage
+       // add the graph canvas to the body of the webpage
       var chart1 = d3.select("#area1").append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
@@ -702,12 +790,12 @@
         .append("g")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      // add the tooltip area to the webpage
+       // add the tooltip area to the webpage
       var tooltip = d3.select("#graph-body").append("div")
           .attr("class", "tooltip")
           .style("opacity", 0);
 
-      //console.log(min, max);
+       //console.log(min, max);
       data = d3.csv("Q3/movies.csv").then(function(data){
         data.Rating = +data.Rating;
         data.WinsNoms = +data.WinsNoms;
@@ -723,71 +811,71 @@
           }
         })
 
-        xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
-        yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
-        yScale2.domain([d3.min(data, yValue2)-1, d3.max(data, yValue2)+1]);
-        yScale3.domain([d3.min(data, yValue3)-1, d3.max(data, yValue3)+1]);
-        yScale4.domain([d3.min(data, yValue4)-1, d3.max(data, yValue4)+1]);
-        yScale5.domain([d3.min(data, yValue5)-1, d3.max(data, yValue5)+1]);
+      xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+      yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+      yScale2.domain([d3.min(data, yValue2)-1, d3.max(data, yValue2)+1]);
+      yScale3.domain([d3.min(data, yValue3)-1, d3.max(data, yValue3)+1]);
+      yScale4.domain([d3.min(data, yValue4)-1, d3.max(data, yValue4)+1]);
+      yScale5.domain([d3.min(data, yValue5)-1, d3.max(data, yValue5)+1]);
 
 
-        chart1.append("text")
-           .attr("x",(width/2))
-           .attr("y",10)
-           .attr("text-anchor","middle")
-           .text("Wins+Nominations vs. Rating");
+      chart1.append("text")
+         .attr("x",(width/2))
+         .attr("y",10)
+         .attr("text-anchor","middle")
+         .text("Wins+Nominations vs. Rating");
 
-          // x-axis
-        chart1.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-        chart1.append("text")
-            .attr("class", "label")
-            .attr("x", width)
-            .attr("y", height-10)
-            .style("text-anchor", "end")
-            .text("Rating");
+        // x-axis
+      chart1.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+      chart1.append("text")
+          .attr("class", "label")
+          .attr("x", width)
+          .attr("y", height-10)
+          .style("text-anchor", "end")
+          .text("Rating");
 
           // y-axis
-        chart1.append("g")
-            .attr("class", "y axis")
-            .call(yAxis);
-        chart1.append("text")
-          .attr("class", "label")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
-          .text("Wins+Nominations");
+      chart1.append("g")
+          .attr("class", "y axis")
+          .call(yAxis);
+      chart1.append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Wins+Nominations");
 
           // draw dots
-        chart1.selectAll(".dot")
-            .data(data)
-          .enter().append("circle")
-            .attr("class", "dot")
-            //.attr("d", d3.symbol().type(d3.symbolCross))
-            .attr("r", 3.5)
-            .attr("cx", xMap)
-            .attr("cy", yMap)
-            .style("stroke", function(d) {
-              if(d.IsGoodRating == 1){
-                return('blue');
-              } else{ return 'red'};})
-            .on("mouseover", function(d) {
-                tooltip.transition()
-                     .duration(200)
-                     .style("opacity", .9);
-                tooltip.html(d.Title + "<br/> (" + xValue(d)
-                + ", " + yValue(d) + ")")
-                     .style("left", (d3.event.pageX + 5) + "px")
-                     .style("top", (d3.event.pageY - 28) + "px");
-            })
-            .on("mouseout", function(d) {
-                tooltip.transition()
-                     .duration(500)
-                     .style("opacity", 0);
-            });
+      chart1.selectAll(".dot")
+          .data(data)
+        .enter().append("circle")
+          .attr("class", "dot")
+          //.attr("d", d3.symbol().type(d3.symbolCross))
+          .attr("r", 3.5)
+          .attr("cx", xMap)
+          .attr("cy", yMap)
+          .style("stroke", function(d) {
+            if(d.IsGoodRating == 1){
+              return('blue');
+            } else{ return 'red'};})
+          .on("mouseover", function(d) {
+              tooltip.transition()
+                   .duration(200)
+                   .style("opacity", .9);
+              tooltip.html(d.Title + "<br/> (" + xValue(d)
+              + ", " + yValue(d) + ")")
+                   .style("left", (d3.event.pageX + 5) + "px")
+                   .style("top", (d3.event.pageY - 28) + "px");
+          })
+          .on("mouseout", function(d) {
+              tooltip.transition()
+                   .duration(500)
+                   .style("opacity", 0);
+          });
 
 
               // draw legend
@@ -983,25 +1071,25 @@
              .attr("text-anchor","middle")
              .text("Sqrt of Votes vs. Rating");
         chart4.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-        chart4.append("text")
-    .attr("class", "label")
-    .attr("x", width)
-    .attr("y", height-10)
-    .style("text-anchor", "end")
-    .text("Rating");
-        chart4.append("g")
-      .attr("class", "y axis")
-      .call(yAxis4);
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
         chart4.append("text")
           .attr("class", "label")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".71em")
+          .attr("x", width)
+          .attr("y", height-10)
           .style("text-anchor", "end")
-          .text("Votes");
+          .text("Rating");
+              chart4.append("g")
+            .attr("class", "y axis")
+            .call(yAxis4);
+              chart4.append("text")
+                .attr("class", "label")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Votes");
         chart4.selectAll(".dot")
             .data(data)
           .enter().append("circle")
@@ -1132,221 +1220,217 @@
             .text(function(d) { return d;})
       });
     </script>
+    <script>
+      var margin = {top: 30, right: 70, bottom:70, left: 70},
+        width = 600 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom,
+        colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+        boroughs = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island'],
+        crime = ['Assault', 'Burglary', 'Housing', 'Murder', 'Robbery', 'Shooting'],
+        years = [2011,2012,2013,2014,2015],
+        xDomainCrime = crime,
+        yDomain = boroughs,
+        xCrime = d3.scaleBand().domain(crime).range([0,width-margin.left-margin.right]),
+        y = d3.scaleBand().domain(boroughs).range([0,height-margin.top-margin.bottom]),
+        year = 2011,
+        p = 2,
+        arr = [],
+        arrLength = 0;
 
 
-        <script>
-          var margin = {top: 30, right: 70, bottom:70, left: 70},
-            width = 600 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom,
-            colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
-            boroughs = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island'],
-            crime = ['Assault', 'Burglary', 'Housing', 'Murder', 'Robbery', 'Shooting'],
-            years = [2011,2012,2013,2014,2015],
-            xDomainCrime = crime,
-            yDomain = boroughs,
-            xCrime = d3.scaleBand().domain(crime).range([0,width-margin.left-margin.right]),
-            y = d3.scaleBand().domain(boroughs).range([0,height-margin.top-margin.bottom]),
-            year = 2011,
-            p = 2,
-            arr = [],
-            arrLength = 0;
+      var title1 = d3.select("#title1")
+        .attr("width", (width+margin.left+margin.right))
+        .attr("height", (margin.top*4))
+        .append("g")
+        ;
+      var select3 = d3.select("#dropdown")
+        .attr("width", (width+margin.left+margin.right))
+        .attr("height", (margin.top*4))
+        .append("g")
+        .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
+
+      var select = select3
+        .append('select')
+          .attr('class','select')
+          .on('change',onchange)
+
+      var options = select
+        .selectAll('option')
+        .data(years).enter()
+        .append('option')
+          .text(function (d) { return d; });
+
+      function onchange() {
+        selectValue = d3.select('select').property('value')
+        year = (selectValue);
+        display2();
+      };
+
+      var svg6 = d3.select("#area6").append("svg")
+        .attr("width", (width+margin.left+margin.right))
+        .attr("height", (height+margin.top+margin.bottom))
+        .append("g")
+        .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
+
+      var xAxisCrime = d3.axisBottom()
+        .tickSize(0)
+        .scale(xCrime);
+
+      var yAxis = d3.axisLeft()
+        .tickSize(0)
+        .scale(y);
+
+      var colorScale = d3.scaleQuantile().range(colors);
+
+      var colorDomain; // generated dynamically
+
+      svg6.append("text")
+          .attr("class", "mono")
+         .attr("x",-5)
+         .attr("y",10)
+         .attr("text-anchor","end")
+         .text("Borough");
+
+      svg6.append("text")
+          .attr("x", width-100)
+          .attr("y", height-margin.bottom)
+          .attr("text-anchor","end")
+          .attr("class", "mono")
+          .text("Crime");
+
+      title1.append("text")
+         .attr("x",200)
+         .attr("y",200)
+         .attr("text-anchor","start")
+         .attr("class", "title")
+         .text("Crimes in New York City");
 
 
-          var title1 = d3.select("#title1")
-            .attr("width", (width+margin.left+margin.right))
-            .attr("height", (margin.top*4))
-            .append("g")
-            ;
-          var select3 = d3.select("#dropdown")
-            .attr("width", (width+margin.left+margin.right))
-            .attr("height", (margin.top*4))
-            .append("g")
-            .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
-
-          var select = select3
-            .append('select')
-              .attr('class','select')
-              .on('change',onchange)
-
-          var options = select
-            .selectAll('option')
-            .data(years).enter()
-            .append('option')
-              .text(function (d) { return d; });
-
-          function onchange() {
-            selectValue = d3.select('select').property('value')
-            year = (selectValue);
-            display2();
-          };
-
-          var svg6 = d3.select("#area6").append("svg")
-            .attr("width", (width+margin.left+margin.right))
-            .attr("height", (height+margin.top+margin.bottom))
-            .append("g")
-            .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
-
-          var xAxisCrime = d3.axisBottom()
-            .tickSize(0)
-            .scale(xCrime);
-
-          var yAxis = d3.axisLeft()
-            .tickSize(0)
-            .scale(y);
-
-          var colorScale = d3.scaleQuantile().range(colors);
-
-          var colorDomain; // generated dynamically
-
-          svg6.append("text")
-              .attr("class", "mono")
-             .attr("x",-5)
-             .attr("y",10)
-             .attr("text-anchor","end")
-             .text("Borough");
-
-          svg6.append("text")
-              .attr("x", width-100)
-              .attr("y", height-margin.bottom)
-              .attr("text-anchor","end")
-              .attr("class", "mono")
-              .text("Crime");
-
-          title1.append("text")
-             .attr("x",200)
-             .attr("y",200)
-             .attr("text-anchor","start")
-             .attr("class", "title")
-             .text("Crimes in New York City");
+      var legend1 = svg6.selectAll(".legend2").append("g")
+          .data(colors)
+        .enter().append("g")
+          .attr("class", "legend2");
 
 
-          var legend1 = svg6.selectAll(".legend2").append("g")
-              .data(colors)
-            .enter().append("g")
-              .attr("class", "legend2");
+      legend1.append("rect")
+          .attr("x", function(d, i) {
+            return xCrime.bandwidth()/2*i + 30})
+          .attr("y", height-(10))
+          .attr("width", xCrime.bandwidth()/2)
+          .attr("height", y.bandwidth() / 6)
+          .style("fill", function(d){
+            return d});
 
-
-          legend1.append("rect")
-              .attr("x", function(d, i) {
-                return xCrime.bandwidth()/2*i + 30})
-              .attr("y", height-(10))
-              .attr("width", xCrime.bandwidth()/2)
-              .attr("height", y.bandwidth() / 6)
-              .style("fill", function(d){
-                return d});
-
-          svg6.append("g")
-            .attr("class", "axis")
-            .attr("transform", "translate(0," + (height) + ")")
-            .call(xAxisCrime)
-            .selectAll("text")
-              .attr("transform", "rotate(270)")
-              .attr("x", function(d,i){
-                return margin.bottom-30;
-              })
-              .attr("y",0)
-              .style("text-anchor", "start");
-
-          svg6.append("g").attr("class", "axis").call(yAxis);
-
-
-          svg6.append("text")
-            .attr("x", width/4)
-            .attr("y", height-20)
-            .attr("dy", "0.35em")
-            .attr("class", "mono")
-            .text(function(d){
-              return "No. of Crimes";
-            });
-
-
-          var map11 = d3.map();
-          var map12 = d3.map();
-          var map13 = d3.map();
-          var map14 = d3.map();
-          var map15 = d3.map();
-          var map = d3.map();
-
-
-          const data6 = d3.csv("Q4/heatmap.csv", function(d){
-            if(parseInt(d.Year)==2011){
-              map11.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
-            else if(parseInt(d.Year)==2012){
-              map12.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
-            else if(parseInt(d.Year)==2013){
-              map13.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
-            else if(parseInt(d.Year)==2014){
-              map14.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
-            else if(parseInt(d.Year)==2015){
-              map15.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
-          });
-
-          data6.then(function(){
-            display2();
-            return display2();
+      svg6.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (height) + ")")
+        .call(xAxisCrime)
+        .selectAll("text")
+          .attr("transform", "rotate(270)")
+          .attr("x", function(d,i){
+            return margin.bottom-30;
           })
+          .attr("y",0)
+          .style("text-anchor", "start");
 
-          function display2(){
-            var processed = [];
-            picker = year;
-            for (index=0; index < crime.length; index++){
-              for(borough=0; borough<boroughs.length;borough++){
-                var count = 0
+      svg6.append("g").attr("class", "axis").call(yAxis);
 
-                if(picker==2011){count = map11.get(crime[index])[borough]}
-                else if(picker==2012){count = map12.get(crime[index])[borough]}
-                else if(picker==2013){count = map13.get(crime[index])[borough]}
-                else if(picker==2014){count = map14.get(crime[index])[borough]}
-                else if(picker==2015){count = map15.get(crime[index])[borough]}
-                processed.push({'borough':boroughs[borough],'crime':crime[index],'count':count});
-              }
-            };
 
-            colorDomain = d3.extent(processed, function(entry){
-              return parseInt(entry.count);});
-            colorScale.domain(d3.range(colorDomain[0],colorDomain[1]));
+      svg6.append("text")
+        .attr("x", width/4)
+        .attr("y", height-20)
+        .attr("dy", "0.35em")
+        .attr("class", "mono")
+        .text(function(d){
+          return "No. of Crimes";
+        });
 
-            var rects6 = svg6.selectAll(".heatmap").data(processed);//cvg was canvas
 
-            //console.log(legend);
-            rects6.enter().append("rect").attr("class","heatmap");
-            rects6.exit().transition().duration(1000).remove();
+      var map11 = d3.map();
+      var map12 = d3.map();
+      var map13 = d3.map();
+      var map14 = d3.map();
+      var map15 = d3.map();
+      var map = d3.map();
 
-            rects6.transition().duration(1000)
-              .attr("x", function(d) {
-                return xCrime(d.crime) + p / 2; })
-              .attr("y", function(d) { return y(d.borough) + p / 2; })
-              .attr("width", xCrime.bandwidth() - p)
-              .attr("height", y.bandwidth() - p)
-              .attr("class", "heatmap bordered")
-              .style("fill", function(d) {
-                //console.log(d.count, colorScale(d.count));
-                return colorScale(d.count); });
 
-            var list2 = Object.values(colorScale.quantiles());
-            list2.unshift(0);
+      const data6 = d3.csv("Q4/heatmap.csv", function(d){
+        if(parseInt(d.Year)==2011){
+          map11.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2012){
+          map12.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2013){
+          map13.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2014){
+          map14.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+        else if(parseInt(d.Year)==2015){
+          map15.set(d['Crime Type'],[parseInt(d.Bronx), parseInt(d.Brooklyn), parseInt(d.Manhattan), parseInt(d.Queens), parseInt(d['Staten Island'])])}
+      });
 
-            var legend = svg6.selectAll(".legend").data(list2);
+      data6.then(function(){
+        display2();
+        return display2();
+      })
 
-            legend.exit().remove();
+      function display2(){
+        var processed = [];
+        picker = year;
+        for (index=0; index < crime.length; index++){
+          for(borough=0; borough<boroughs.length;borough++){
+            var count = 0
 
-            legend.enter().append("text")
-              .attr("class", "legend")
-              .attr("x", function(d, i) {
-                return xCrime.bandwidth()/2*i + 20})
-              .attr("y", height+5)
-              .attr("dy", ".35em")
-              .attr("dx", "1em")
-              .style("text-anchor", "start")
-              .merge(legend)
-                .text(function(d){
-                return parseInt(d);
-              });
-            }
+            if(picker==2011){count = map11.get(crime[index])[borough]}
+            else if(picker==2012){count = map12.get(crime[index])[borough]}
+            else if(picker==2013){count = map13.get(crime[index])[borough]}
+            else if(picker==2014){count = map14.get(crime[index])[borough]}
+            else if(picker==2015){count = map15.get(crime[index])[borough]}
+            processed.push({'borough':boroughs[borough],'crime':crime[index],'count':count});
+          }
+        };
+
+        colorDomain = d3.extent(processed, function(entry){
+          return parseInt(entry.count);});
+        colorScale.domain(d3.range(colorDomain[0],colorDomain[1]));
+
+        var rects6 = svg6.selectAll(".heatmap").data(processed);//cvg was canvas
+
+        //console.log(legend);
+        rects6.enter().append("rect").attr("class","heatmap");
+        rects6.exit().transition().duration(1000).remove();
+
+        rects6.transition().duration(1000)
+          .attr("x", function(d) {
+            return xCrime(d.crime) + p / 2; })
+          .attr("y", function(d) { return y(d.borough) + p / 2; })
+          .attr("width", xCrime.bandwidth() - p)
+          .attr("height", y.bandwidth() - p)
+          .attr("class", "heatmap bordered")
+          .style("fill", function(d) {
+            //console.log(d.count, colorScale(d.count));
+            return colorScale(d.count); });
+
+        var list2 = Object.values(colorScale.quantiles());
+        list2.unshift(0);
+
+        var legend = svg6.selectAll(".legend").data(list2);
+
+        legend.exit().remove();
+
+        legend.enter().append("text")
+          .attr("class", "legend")
+          .attr("x", function(d, i) {
+            return xCrime.bandwidth()/2*i + 20})
+          .attr("y", height+5)
+          .attr("dy", ".35em")
+          .attr("dx", "1em")
+          .style("text-anchor", "start")
+          .merge(legend)
+            .text(function(d){
+            return parseInt(d);
+          });
+        }
 
     </script>
-
-
     <script type="text/javascript">
       var data7 = [{country: 'Bangladesh', population_2012: 105905297, growth: {year_2013:42488 , year_2014:934 , year_2015:52633 , year_2016:112822 , year_2017:160792}},
         {country: 'Ethopia', population_2012: 75656319, growth: {year_2013:1606010 , year_2014:1606705 , year_2015:1600666 , year_2016:1590077 , year_2017:1580805}},
@@ -1604,8 +1688,6 @@
 
 
     </script>
-
-
     <script type="text/javascript">
       var header8 = d3.select("#map").append("h2")
           .attr("class")
@@ -1738,6 +1820,68 @@
 
     </script>
 
+  </body>
+</html>
+<!--
+
+<!DOCTYPE html>
+<html lang="en">
+<title>D3 Examples</title>
+  <head>
+    <meta charset="utf-8">
+    <script src="lib/d3.v5.min.js"></script>
+    <script src="lib/d3-scale-chromatic.v1.min.js"></script>
+    <script src="lib/topojson.v2.min.js"></script>
+    <script src="lib/d3-tip.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300" rel="stylesheet">
+    <style>
+      html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+      .w3-sidebar {
+        z-index: 3;
+        width: 250px;
+        top: 43px;
+        bottom: 0;
+        height: inherit;
+      }
+
+
+
+
+
+      @media only screen and (max-width:680px) {
+        /* For mobile phones: */
+      }
+    </style>
+  </head>
+  <div id="edgeGraph" style="position:static"></div>
+  <div id="graph-body" style="position:static">
+    <div id="area1" style="position:static"></div>
+    <div id="area2" style="position:static"></div>
+    <div id="area3" style="position:static"></div>
+    <div id="area4" style="position:static"></div>
+    <div id="area5" style="position:static"></div>
+  </div>
+  <div id="area6" style="position:static">
+    <div id="title1"></div>
+    <div id="dropdown"></div>
+  </div>
+  <div id="area7" style="position:static">
+    <svg id="area7-1" class="mainChart" width="760" height="200"></svg>
+    <svg id="area7-2" class="detailsChart" width="200" height="200"></svg>
+  </div>
+  <div id="area8" style="position:static">
+    <svg id = "map" width="960" height="600"></svg>
+  </div>
+  <body>
+
+
 
   </body>
 </html>
+-->
