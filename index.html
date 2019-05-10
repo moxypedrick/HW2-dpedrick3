@@ -1,6 +1,6 @@
 <!DOCTYPE html>
   <html lang="en">
-  <title>W3.CSS Template</title>
+  <title>D3 Examples</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="lib/d3.v5.min.js"></script>
@@ -12,6 +12,19 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
+    .svg-container {
+      display: inline-block;
+      position: relative;
+      width: 100%;
+      padding-bottom: 100%;
+      vertical-align: top;
+      overflow: hidden;
+    }
+    .svg-content {
+      display: inline-block;
+      top: 0;
+      left: 0;
+    }
     html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
     .w3-sidebar {
       z-index: 3;
@@ -222,7 +235,6 @@
           <div id="area5" style="position:static"></div>
         </div>
       </div>
-
       <div id = "heatmap" class="w3-row w3-padding-64">
         <div class="w3-row-padding w3-container">
           <h1 class="w3-text-teal">Crime Map</h1>
@@ -234,7 +246,6 @@
           <div id="dropdown"></div>
         </div>
       </div>
-
       <div id="bar-chart" class="w3-row w3-padding-64">
         <div class="w3-row-padding w3-container">
           <h1 class="w3-text-teal">Interactive Barchart</h1>
@@ -246,7 +257,6 @@
           <svg id="area7-2" class="detailsChart" width="200" height="200"></svg>
         </div>
       </div>
-
       <div id = "choropleth-map" class="w3-row w3-padding-64">
         <div class="w3-row-padding w3-container">
           <h1 class="w3-text-teal">Poverty Map</h1>
@@ -257,7 +267,6 @@
           <svg id = "map" width="960" height="600"></svg>
         </div>
       </div>
-
       <footer id="myFooter">
         <div class="w3-container w3-theme-l2 w3-padding-32">
           <h4></h4>
@@ -267,7 +276,6 @@
           <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
         </div>
       </footer>
-
       <!-- END MAIN -->
     </div>
 
@@ -574,8 +582,11 @@
         .on("tick", tick);
 
       var svg1 = d3.select("#edgeGraph").append("svg")
-        .attr("width", width)
-        .attr("height", height);
+        .attr("preserveAspectRatio","xMinYMin meet")
+        .attr("viewBox", "0 0 1000 500")
+        .classed("svg-content", true)
+        //.attr("width", width)
+        //.attr("height", height);
 
       // add the links and the arrows
 
@@ -714,8 +725,8 @@
       document.getElementById("area4").style.pageBreakAfter = "always";
       document.getElementById("area5").style.pageBreakAfter = "always";
       var margin = {top: 50, right: 20, bottom: 30, left: 80},
-          width = 960 - margin.left - margin.right,
-          height = 500 - margin.top - margin.bottom;
+          width = 960 - margin.left - margin.right,//860
+          height = 500 - margin.top - margin.bottom;//420
 
       // setup x
       var xValue = function(d) { return parseFloat(d.Rating);}, // data -> value
@@ -761,34 +772,39 @@
 
        // add the graph canvas to the body of the webpage
       var chart1 = d3.select("#area1").append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
+        .attr("preserveAspectRatio","xMinYMin meet")
+        .attr("viewBox", "0 0 860 420")
+        .classed("svg-content", true)
         .append("g")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       var chart2 = d3.select("#area2").append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("preserveAspectRatio","xMinYMin meet")
+      .attr("viewBox", "0 0 860 420")
+      .classed("svg-content", true)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       var chart3 = d3.select("#area3").append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("preserveAspectRatio","xMinYMin meet")
+      .attr("viewBox", "0 0 860 420")
+      .classed("svg-content", true)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       var chart4 = d3.select("#area4").append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("preserveAspectRatio","xMinYMin meet")
+      .attr("viewBox", "0 0 860 420")
+      .classed("svg-content", true)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       var chart5 = d3.select("#area5").append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("preserveAspectRatio","xMinYMin meet")
+      .attr("viewBox", "0 0 860 420")
+      .classed("svg-content", true)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
        // add the tooltip area to the webpage
       var tooltip = d3.select("#graph-body").append("div")
@@ -1222,8 +1238,8 @@
     </script>
     <script>
       var margin = {top: 30, right: 70, bottom:70, left: 70},
-        width = 600 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom,
+        width = 600 - margin.left - margin.right,//440
+        height = 500 - margin.top - margin.bottom,//400
         colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
         boroughs = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island'],
         crime = ['Assault', 'Burglary', 'Housing', 'Murder', 'Robbery', 'Shooting'],
@@ -1267,10 +1283,11 @@
       };
 
       var svg6 = d3.select("#area6").append("svg")
-        .attr("width", (width+margin.left+margin.right))
-        .attr("height", (height+margin.top+margin.bottom))
-        .append("g")
-        .attr("transform", "translate(" + margin.left*2 + "," + margin.top + ")");
+      .attr("preserveAspectRatio","xMinYMin meet")
+      .attr("viewBox", "0 0 440 400")
+      .classed("svg-content", true)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       var xAxisCrime = d3.axisBottom()
         .tickSize(0)
@@ -1688,6 +1705,7 @@
 
 
     </script>
+
     <script type="text/javascript">
       var header8 = d3.select("#map").append("h2")
           .attr("class")
