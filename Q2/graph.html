@@ -337,7 +337,6 @@ var node = svg.selectAll(".node")
 node.append("circle")
     .attr("class","circle")
     .attr("r", function(d) {
-      console.log(d.name,degrees[d.name]);
       weight = degrees[d.name];
       var minRadius = 3;
       return minRadius + (weight*2);
@@ -417,9 +416,7 @@ function dblclick(d) {
   if(typeof d.fixed == "undefined"){
     d.fixed = false;
   };
-  console.log(d.name, d.fixed);
   d.fixed = !d.fixed;
-  console.log(d.name, d.fixed, d3.event.active);
   if(d.fixed == true){
     d.fx = d.x;
     d.fy = d.y;
